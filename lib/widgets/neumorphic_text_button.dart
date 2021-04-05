@@ -48,10 +48,7 @@ class NeumorphicTextButton extends StatelessWidget {
               ],
             ),
           ),
-          onPressed: () {
-            FocusScope.of(context).unfocus();
-            onPressed();
-          },
+          onPressed: () => onPressed(),
           style: style,
         ),
       ),

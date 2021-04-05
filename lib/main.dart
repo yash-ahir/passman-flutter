@@ -4,9 +4,7 @@ import 'package:passman/routes/password_route.dart';
 import 'package:passman/themes/theme.dart';
 import 'package:responsive_framework/responsive_framework.dart';
 
-void main() {
-  runApp(MyApp());
-}
+void main() => runApp(MyApp());
 
 class MyApp extends StatelessWidget {
   @override

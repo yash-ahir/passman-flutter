@@ -21,10 +21,7 @@ class NeumorphicIconButton extends StatelessWidget {
         minDistance: -5,
         tooltip: tooltip,
         child: icon,
-        onPressed: () {
-          FocusScope.of(context).unfocus();
-          onPressed();
-        },
+        onPressed: () => onPressed(),
         style: style,
       ),
     );
