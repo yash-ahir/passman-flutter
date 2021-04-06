@@ -1,102 +1,89 @@
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
-import 'package:flash/flash.dart';
 import 'package:passman/widgets/neumorphic_text_button.dart';
 
 class Alert {
   final BuildContext context;
-  final double innerPadding;
-  final double outerPadding;
 
-  Alert(
-    this.context, {
-    this.innerPadding = 0,
-    this.outerPadding = 0,
-  });
+  Alert(this.context);
 
   void showSnackBar({
     @required String message,
   }) {
-    showFlash(
+    final _snackBar = SnackBar(
       duration: Duration(seconds: 2),
-      context: context,
-      builder: (context, controller) {
-        return Flash.bar(
-          controller: controller,
-          backgroundColor:
-              NeumorphicTheme.currentTheme(context).shadowLightColor,
-          borderRadius: BorderRadius.circular(10),
-          enableDrag: true,
-          horizontalDismissDirection: HorizontalDismissDirection.horizontal,
-          margin: const EdgeInsets.all(10),
-          forwardAnimationCurve: Curves.easeIn,
-          reverseAnimationCurve: Curves.easeOut,
-          child: FlashBar(
-            message: Text(
-              message,
-              style: TextStyle(
-                fontSize: NeumorphicTheme.currentTheme(context)
-                    .textTheme
-                    .headline6
-                    .fontSize,
-                color: NeumorphicTheme.defaultTextColor(context),
-              ),
-            ),
-          ),
-        );
-      },
+      content: Text(
+        message,
+        style: TextStyle(
+          fontFamily: NeumorphicTheme.currentTheme(context)
+              .textTheme
+              .headline6
+              .fontFamily,
+          fontSize: NeumorphicTheme.currentTheme(context)
+              .textTheme
+              .headline6
+              .fontSize,
+          color: NeumorphicTheme.defaultTextColor(context),
+        ),
+      ),
+      backgroundColor: NeumorphicTheme.currentTheme(context).shadowLightColor,
+      behavior: SnackBarBehavior.floating,
+      margin: const EdgeInsets.all(10),
+      padding: const EdgeInsets.symmetric(horizontal: 10),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
     );
+
+    ScaffoldMessenger.of(context).showSnackBar(_snackBar);
   }
 
-  void showDialog({
+  void showActionDialog({
     @required String message,
     @required void Function() onConfirm,
   }) {
-    showFlash(
+    showDialog(
       context: context,
-      builder: (context, controller) {
-        return Flash.dialog(
-          controller: controller,
+      builder: (ctx) {
+        return SimpleDialog(
+          title: Text(
+            message,
+            style: TextStyle(
+              fontSize: NeumorphicTheme.currentTheme(context)
+                  .textTheme
+                  .headline6
+                  .fontSize,
+              color: NeumorphicTheme.defaultTextColor(context),
+            ),
+          ),
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
           backgroundColor:
               NeumorphicTheme.currentTheme(context).shadowLightColor,
-          borderRadius: BorderRadius.circular(10),
-          enableDrag: false,
-          margin: const EdgeInsets.all(10),
-          forwardAnimationCurve: Curves.easeIn,
-          reverseAnimationCurve: Curves.easeOut,
-          child: FlashBar(
-            message: Text(
-              message,
-              style: TextStyle(
-                fontSize: NeumorphicTheme.currentTheme(context)
-                    .textTheme
-                    .headline6
-                    .fontSize,
-                color: NeumorphicTheme.defaultTextColor(context),
-              ),
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                NeumorphicTextButton(
+                  innerPadding: 10,
+                  outerPadding: 10,
+                  text: "Yes",
+                  tooltip: "Permanently delete this credential",
+                  onPressed: onConfirm,
+                  icon: Icons.delete,
+                  iconColor: Colors.red,
+                ),
+                NeumorphicTextButton(
+                  innerPadding: 10,
+                  outerPadding: 10,
+                  text: "No",
+                  tooltip: "Dismiss this message",
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                  icon: Icons.cancel,
+                  iconColor: NeumorphicTheme.defaultTextColor(context),
+                ),
+              ],
             ),
-            actions: [
-              NeumorphicTextButton(
-                innerPadding: this.innerPadding,
-                outerPadding: this.outerPadding,
-                text: "Yes",
-                tooltip: "Permanently delete this credential",
-                onPressed: onConfirm,
-                icon: Icons.delete,
-                iconColor: Colors.red,
-              ),
-              NeumorphicTextButton(
-                innerPadding: this.innerPadding,
-                outerPadding: this.outerPadding,
-                text: "No",
-                tooltip: "Dismiss this message",
-                onPressed: () {
-                  controller.dismiss();
-                },
-                icon: Icons.cancel,
-                iconColor: NeumorphicTheme.defaultTextColor(context),
-              ),
-            ],
-          ),
+          ],
         );
       },
     );
