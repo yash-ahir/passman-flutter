@@ -11,8 +11,6 @@ class PasswordRoute extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // final MediaQueryData mediaQueryData = MediaQuery.of(context);
-
     final NeumorphicAppBar appBar = NeumorphicAppBar(
       leading: NeumorphicIconButton(
         icon: Icon(
@@ -28,11 +26,8 @@ class PasswordRoute extends StatelessWidget {
       title: Text("Add new credentials"),
     );
 
-    // final double _mediaQueriedHeight = (mediaQueryData.size.height -
-    //     mediaQueryData.padding.top -
-    //     appBar.preferredSize.height);
-    final double _defaultOuterPadding = 15; // _mediaQueriedHeight * 0.020;
-    final double _defaultInnerPadding = 15; // _mediaQueriedHeight * 0.020;
+    final double _defaultOuterPadding = 15;
+    final double _defaultInnerPadding = 15;
 
     return GestureDetector(
       onTap: () {
