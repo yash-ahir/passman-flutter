@@ -35,10 +35,18 @@ class Alert {
     ScaffoldMessenger.of(context).showSnackBar(_snackBar);
   }
 
-  void showActionDialog({
-    @required String message,
-    @required void Function() onConfirm,
-  }) {
+  void showActionDialog(
+      {@required String message,
+      @required void Function() onConfirm,
+      @required String confirmText,
+      @required String confirmTooltip,
+      @required IconData confirmIcon,
+      Color confirmIconColor = Colors.green,
+      @required void Function() onCancel,
+      @required String cancelText,
+      @required String cancelTooltip,
+      @required IconData cancelIcon,
+      Color cancelIconColor = Colors.red}) {
     showDialog(
       context: context,
       builder: (ctx) {
@@ -64,22 +72,20 @@ class Alert {
                 NeumorphicTextButton(
                   innerPadding: 10,
                   outerPadding: 10,
-                  text: "Yes",
-                  tooltip: "Permanently delete this credential",
+                  text: confirmText,
+                  tooltip: confirmTooltip,
                   onPressed: onConfirm,
-                  icon: Icons.delete,
-                  iconColor: Colors.red,
+                  icon: confirmIcon,
+                  iconColor: confirmIconColor,
                 ),
                 NeumorphicTextButton(
                   innerPadding: 10,
                   outerPadding: 10,
-                  text: "No",
-                  tooltip: "Dismiss this message",
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                  },
-                  icon: Icons.cancel,
-                  iconColor: NeumorphicTheme.defaultTextColor(context),
+                  text: cancelText,
+                  tooltip: cancelTooltip,
+                  onPressed: onCancel,
+                  icon: cancelIcon,
+                  iconColor: cancelIconColor,
                 ),
               ],
             ),
