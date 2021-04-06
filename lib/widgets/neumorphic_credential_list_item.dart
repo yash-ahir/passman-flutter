@@ -91,11 +91,7 @@ class NeumorphicCredentialListItem extends StatelessWidget {
                 ),
                 tooltip: "Delete credential",
                 onPressed: () {
-                  Alert(
-                    context,
-                    innerPadding: 10,
-                    outerPadding: 10,
-                  ).showDialog(
+                  Alert(context).showActionDialog(
                     onConfirm: () {},
                     message: "Delete credential? This action cannot be undone!",
                   );
