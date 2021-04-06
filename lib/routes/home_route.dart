@@ -1,5 +1,6 @@
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 import 'package:passman/routes/credential_route.dart';
+import 'package:passman/routes/settings_route.dart';
 import 'package:passman/widgets/neumorphic_icon_button.dart';
 import 'package:passman/widgets/neumorphic_credential_list_item.dart';
 // Dummy data
@@ -18,19 +19,32 @@ class HomeRoute extends StatelessWidget {
       textStyle: NeumorphicTheme.currentTheme(context).textTheme.bodyText1,
       leading: Image.asset("assets/images/logo.png"),
       title: Text(title),
+      actionSpacing: 20,
       actions: [
         NeumorphicIconButton(
-          tooltip: "Add new credentials",
+          tooltip: "Application settings",
+          icon: Icon(
+            Icons.settings,
+            color: NeumorphicTheme.accentColor(context),
+          ),
+          onPressed: () {
+            Navigator.of(context).pushNamed(
+              SettingsRoute.routeName,
+            );
+          },
+        ),
+        NeumorphicIconButton(
+          tooltip: "Add new credential",
           icon: Icon(
             Icons.add,
             color: NeumorphicTheme.accentColor(context),
           ),
           onPressed: () {
             Navigator.of(context).pushNamed(
-              PasswordRoute.routeName,
+              CredentialRoute.routeName,
             );
           },
-        )
+        ),
       ],
     );
 

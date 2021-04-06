@@ -1,6 +1,7 @@
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 import 'package:passman/routes/home_route.dart';
 import 'package:passman/routes/credential_route.dart';
+import 'package:passman/routes/settings_route.dart';
 import 'package:passman/themes/theme.dart';
 import 'package:responsive_framework/responsive_framework.dart';
 
@@ -18,7 +19,8 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: title,
       routes: {
-        PasswordRoute.routeName: (ctx) => PasswordRoute(),
+        SettingsRoute.routeName: (ctx) => SettingsRoute(),
+        CredentialRoute.routeName: (ctx) => CredentialRoute(),
       },
       home: HomeRoute(
         title: title,
