@@ -6,7 +6,7 @@ import 'package:passman/widgets/neumorphic_text_field.dart';
 import 'package:passman/widgets/neumorphic_password_field.dart';
 
 class CredentialRoute extends StatelessWidget {
-  static String routeName = "/password-route";
+  static String routeName = "/credential-route";
   final _formKey = GlobalKey<FormState>();
 
   @override
@@ -23,7 +23,7 @@ class CredentialRoute extends StatelessWidget {
         },
       ),
       textStyle: NeumorphicTheme.currentTheme(context).textTheme.bodyText1,
-      title: Text("Add new credentials"),
+      title: Text("Add new credential"),
     );
 
     final double _defaultOuterPadding = 15;
