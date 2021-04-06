@@ -1,6 +1,6 @@
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 import 'package:passman/routes/home_route.dart';
-import 'package:passman/routes/password_route.dart';
+import 'package:passman/routes/credential_route.dart';
 import 'package:passman/themes/theme.dart';
 import 'package:responsive_framework/responsive_framework.dart';
 

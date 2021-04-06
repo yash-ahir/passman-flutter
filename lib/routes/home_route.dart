@@ -1,5 +1,5 @@
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
-import 'package:passman/routes/password_route.dart';
+import 'package:passman/routes/credential_route.dart';
 import 'package:passman/widgets/neumorphic_icon_button.dart';
 import 'package:passman/widgets/neumorphic_credential_list_item.dart';
 // Dummy data

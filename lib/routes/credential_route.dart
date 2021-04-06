@@ -5,7 +5,7 @@ import 'package:passman/widgets/neumorphic_text_button.dart';
 import 'package:passman/widgets/neumorphic_text_field.dart';
 import 'package:passman/widgets/neumorphic_password_field.dart';
 
-class PasswordRoute extends StatelessWidget {
+class CredentialRoute extends StatelessWidget {
   static String routeName = "/password-route";
   final _formKey = GlobalKey<FormState>();
 
