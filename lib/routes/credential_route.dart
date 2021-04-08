@@ -11,6 +11,11 @@ class CredentialRoute extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    String title;
+    String account;
+    String password;
+    String note = "";
+
     final NeumorphicAppBar appBar = NeumorphicAppBar(
       leading: NeumorphicIconButton(
         icon: Icon(
@@ -55,7 +60,7 @@ class CredentialRoute extends StatelessWidget {
                   },
                   onChanged: (text) {},
                   onSaved: (text) {
-                    print(text);
+                    title = text;
                   },
                   outerPadding: _defaultOuterPadding,
                   innerPadding: _defaultInnerPadding,
@@ -72,7 +77,7 @@ class CredentialRoute extends StatelessWidget {
                   },
                   onChanged: (text) {},
                   onSaved: (text) {
-                    print(text);
+                    account = text;
                   },
                   outerPadding: _defaultOuterPadding,
                   innerPadding: _defaultInnerPadding,
@@ -85,20 +90,11 @@ class CredentialRoute extends StatelessWidget {
                     if (text.isEmpty) {
                       return "Enter or generate a password";
                     }
-
                     return null;
                   },
                   onChanged: (text) {},
                   onSaved: (text) {
-                    final pwRegExp = RegExp(r"""
-                    ^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[~`!@#$%^&*()\[\]\-|_{}\\\/+=<>,.?:;"']).{8,}$
-                    """);
-
-                    if (!pwRegExp.hasMatch(text)) {
-                      // "If possible, use a password with atleast an uppercase character," +
-                      // " a lowercase character, a number," +
-                      // " and a special character from ~`!@#\$%^&*-_+=()[]{}:;\"'<>,./|?";
-                    }
+                    password = text;
                   },
                   outerPadding: _defaultOuterPadding,
                   innerPadding: _defaultInnerPadding,
@@ -120,7 +116,9 @@ class CredentialRoute extends StatelessWidget {
                   },
                   onChanged: (text) {},
                   onSaved: (text) {
-                    print(text);
+                    if (text.isNotEmpty) {
+                      note = text;
+                    }
                   },
                   outerPadding: _defaultOuterPadding,
                   innerPadding: _defaultInnerPadding,
@@ -139,11 +137,37 @@ class CredentialRoute extends StatelessWidget {
                     if (_formKey.currentState.validate()) {
                       _formKey.currentState.save();
 
-                      Alert(context).showSnackBar(
-                        message: "Credential added successfully",
+                      final pwRegExp = RegExp(
+                        r"""^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[~`!@#$%^&*()\[\]\-|_{}\\\/+=<>,.?:;\'"]).{8,}$""",
+                        caseSensitive: false,
+                        multiLine: false,
                       );
 
-                      Navigator.of(context).pop();
+                      if (!pwRegExp.hasMatch(password)) {
+                        Alert(context).showAlertDialog(
+                          message:
+                              "Weak password detected\n\nIf possible, use a password with atleast an uppercase character, a lowercase character, a number, and a special character from ~`!@#\$%^&*-_+=()[]{}:;\"'<>,./|? with atleast 8 characters.",
+                          onConfirm: () {
+                            Navigator.of(context).pop();
+
+                            Alert(context).showSnackBar(
+                              message: "Credential added successfully",
+                            );
+
+                            Navigator.of(context).pop();
+                          },
+                          confirmText: "Ok",
+                          confirmTooltip: "Dismiss this warning",
+                          confirmIcon: Icons.warning,
+                          confirmIconColor: Colors.yellowAccent,
+                        );
+                      } else {
+                        Alert(context).showSnackBar(
+                          message: "Credential added successfully",
+                        );
+
+                        Navigator.of(context).pop();
+                      }
                     }
                   },
                 ),
