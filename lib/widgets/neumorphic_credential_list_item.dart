@@ -21,6 +21,7 @@ class NeumorphicCredentialListItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return InkWell(
+      mouseCursor: SystemMouseCursors.basic,
       onTap: () {},
       onLongPress: () {
         FlutterClipboard.copy(account).then(
