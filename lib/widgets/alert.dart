@@ -35,18 +35,19 @@ class Alert {
     ScaffoldMessenger.of(context).showSnackBar(_snackBar);
   }
 
-  void showActionDialog(
-      {@required String message,
-      @required void Function() onConfirm,
-      @required String confirmText,
-      @required String confirmTooltip,
-      @required IconData confirmIcon,
-      Color confirmIconColor = Colors.green,
-      @required void Function() onCancel,
-      @required String cancelText,
-      @required String cancelTooltip,
-      @required IconData cancelIcon,
-      Color cancelIconColor = Colors.red}) {
+  void showActionDialog({
+    @required String message,
+    @required void Function() onConfirm,
+    @required String confirmText,
+    @required String confirmTooltip,
+    @required IconData confirmIcon,
+    Color confirmIconColor = Colors.green,
+    @required void Function() onCancel,
+    @required String cancelText,
+    @required String cancelTooltip,
+    @required IconData cancelIcon,
+    Color cancelIconColor = Colors.red,
+  }) {
     showDialog(
       context: context,
       builder: (ctx) {
@@ -86,6 +87,53 @@ class Alert {
                   onPressed: onCancel,
                   icon: cancelIcon,
                   iconColor: cancelIconColor,
+                ),
+              ],
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  void showAlertDialog({
+    @required String message,
+    @required void Function() onConfirm,
+    @required String confirmText,
+    @required String confirmTooltip,
+    @required IconData confirmIcon,
+    Color confirmIconColor = Colors.green,
+  }) {
+    showDialog(
+      context: context,
+      builder: (ctx) {
+        return SimpleDialog(
+          title: Text(
+            message,
+            style: TextStyle(
+              fontSize: NeumorphicTheme.currentTheme(context)
+                  .textTheme
+                  .headline6
+                  .fontSize,
+              color: NeumorphicTheme.defaultTextColor(context),
+            ),
+          ),
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+          backgroundColor:
+              NeumorphicTheme.currentTheme(context).shadowLightColor,
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                NeumorphicTextButton(
+                  innerPadding: 10,
+                  outerPadding: 10,
+                  text: confirmText,
+                  tooltip: confirmTooltip,
+                  onPressed: onConfirm,
+                  icon: confirmIcon,
+                  iconColor: confirmIconColor,
                 ),
               ],
             ),
