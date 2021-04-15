@@ -1,20 +1,47 @@
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
+import 'package:passman/services/credential_database.dart';
+import 'package:passman/services/crypt.dart';
 import 'package:passman/widgets/alert.dart';
 import 'package:passman/widgets/neumorphic_icon_button.dart';
 import 'package:passman/widgets/neumorphic_text_button.dart';
 import 'package:passman/widgets/neumorphic_text_field.dart';
 import 'package:passman/widgets/neumorphic_password_field.dart';
+import 'package:provider/provider.dart';
+import 'package:uuid/uuid.dart';
 
 class CredentialRoute extends StatelessWidget {
   static String routeName = "/credential-route";
   final _formKey = GlobalKey<FormState>();
+  final crypt = Crypt(masterPass: "Alpha Bravo Charlie Delta");
+
+  Future<Credential> encryptData({
+    @required String title,
+    @required String account,
+    @required String password,
+  }) async {
+    final titleData = await crypt.encrypt(plainText: title);
+    final accountData = await crypt.encrypt(plainText: account);
+    final passwordData = await crypt.encrypt(plainText: password);
+
+    return Credential(
+      id: Uuid().v1(),
+      title: titleData["cipherText"],
+      titleIv: titleData["iv"],
+      account: accountData["cipherText"],
+      accountIv: accountData["iv"],
+      password: passwordData["cipherText"],
+      passwordIv: passwordData["iv"],
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
+    final database = Provider.of<AppDatabase>(context);
+
     String title;
     String account;
     String password;
-    String note = "";
+    String note;
 
     final NeumorphicAppBar appBar = NeumorphicAppBar(
       leading: NeumorphicIconButton(
@@ -148,6 +175,13 @@ class CredentialRoute extends StatelessWidget {
                           message:
                               "Weak password detected\n\nIf possible, use a password with atleast an uppercase character, a lowercase character, a number, and a special character from ~`!@#\$%^&*-_+=()[]{}:;\"'<>,./|? with atleast 8 characters.",
                           onConfirm: () {
+                            encryptData(
+                                    title: title,
+                                    account: account,
+                                    password: password)
+                                .then((credential) =>
+                                    database.insertCredential(credential));
+
                             Navigator.of(context).pop();
 
                             Alert(context).showSnackBar(
@@ -162,6 +196,13 @@ class CredentialRoute extends StatelessWidget {
                           confirmIconColor: Colors.yellowAccent,
                         );
                       } else {
+                        encryptData(
+                                title: title,
+                                account: account,
+                                password: password)
+                            .then((credential) =>
+                                database.insertCredential(credential));
+
                         Alert(context).showSnackBar(
                           message: "Credential added successfully",
                         );
