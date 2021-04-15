@@ -1,10 +1,11 @@
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 import 'package:passman/routes/credential_route.dart';
 import 'package:passman/routes/settings_route.dart';
+import 'package:passman/services/crypt.dart';
 import 'package:passman/widgets/neumorphic_icon_button.dart';
 import 'package:passman/widgets/neumorphic_credential_list_item.dart';
-// Dummy data
-import 'package:passman/dummy_data.dart';
+import 'package:passman/services/credential_database.dart';
+import 'package:provider/provider.dart';
 
 class HomeRoute extends StatelessWidget {
   final String title;
@@ -12,6 +13,32 @@ class HomeRoute extends StatelessWidget {
   HomeRoute({
     @required this.title,
   });
+
+  Future<Credential> decryptData(Credential credential) async {
+    final crypt = Crypt(masterPass: "Alpha Bravo Charlie Delta");
+    final title = await crypt.decrypt(
+      cipherText: credential.title,
+      iv: credential.titleIv,
+    );
+    final account = await crypt.decrypt(
+      cipherText: credential.account,
+      iv: credential.accountIv,
+    );
+    final password = await crypt.decrypt(
+      cipherText: credential.password,
+      iv: credential.passwordIv,
+    );
+
+    return Credential(
+      id: credential.id,
+      title: title,
+      titleIv: credential.titleIv,
+      account: account,
+      accountIv: credential.accountIv,
+      password: password,
+      passwordIv: credential.passwordIv,
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -50,18 +77,42 @@ class HomeRoute extends StatelessWidget {
 
     return Scaffold(
       appBar: appBar,
-      body: ListView.builder(
-        itemCount: dummyData.length,
-        itemBuilder: (ctx, index) {
-          return NeumorphicCredentialListItem(
-            id: dummyData[index].id,
-            title: dummyData[index].title,
-            account: dummyData[index].account,
-            password: dummyData[index].password,
-            note: dummyData[index].note,
+      body: _buildCredentialList(context),
+    );
+  }
+
+  Widget _buildCredentialList(BuildContext context) {
+    final database = Provider.of<AppDatabase>(context);
+
+    return StreamBuilder(
+      stream: database.watchAllCredentials(),
+      builder: (context, AsyncSnapshot<List<Credential>> snapshot) {
+        if (snapshot.connectionState == ConnectionState.active) {
+          final credentials = snapshot.data;
+
+          return ListView.builder(
+            itemCount: credentials.length,
+            itemBuilder: (ctx, index) {
+              return FutureBuilder(
+                future: decryptData(credentials[index]),
+                builder: (ctx, AsyncSnapshot<Credential> snapshot) {
+                  if (snapshot.connectionState == ConnectionState.done) {
+                    return NeumorphicCredentialListItem(snapshot.data);
+                  }
+                  return NeumorphicCredentialListItem(
+                    snapshot.data,
+                    waiting: true,
+                  );
+                },
+              );
+            },
           );
-        },
-      ),
+        }
+
+        return Center(
+          child: CircularProgressIndicator(),
+        );
+      },
     );
   }
 }
