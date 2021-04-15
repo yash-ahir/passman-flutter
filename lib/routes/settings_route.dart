@@ -1,5 +1,6 @@
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 import 'package:passman/widgets/neumorphic_icon_button.dart';
+import 'package:passman/widgets/system_theme_picker.dart';
 
 class SettingsRoute extends StatefulWidget {
   static String routeName = "/settings-route";
@@ -28,7 +29,13 @@ class _SettingsRouteState extends State<SettingsRoute> {
 
     return Scaffold(
       appBar: appBar,
-      body: SingleChildScrollView(),
+      body: Column(
+        children: [
+          SingleChildScrollView(
+            child: SystemThemePicker(),
+          ),
+        ],
+      ),
     );
   }
 }
