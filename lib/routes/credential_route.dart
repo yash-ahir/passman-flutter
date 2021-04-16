@@ -12,19 +12,19 @@ import 'package:uuid/uuid.dart';
 class CredentialRoute extends StatelessWidget {
   static String routeName = "/credential-route";
   final _formKey = GlobalKey<FormState>();
-  final crypt = Crypt(masterPass: "Alpha Bravo Charlie Delta");
+  final _crypt = Crypt(masterPass: "Alpha Bravo Charlie Delta");
 
-  Future<Credential> encryptData({
+  Future<Credential> _encryptData({
     @required String title,
     @required String account,
     @required String password,
   }) async {
-    final titleData = await crypt.encrypt(plainText: title);
-    final accountData = await crypt.encrypt(plainText: account);
-    final passwordData = await crypt.encrypt(plainText: password);
+    final titleData = await _crypt.encrypt(plainText: title);
+    final accountData = await _crypt.encrypt(plainText: account);
+    final passwordData = await _crypt.encrypt(plainText: password);
 
     return Credential(
-      id: Uuid().v1(),
+      id: Uuid().v4(),
       title: titleData["cipherText"],
       titleIv: titleData["iv"],
       account: accountData["cipherText"],
@@ -175,7 +175,7 @@ class CredentialRoute extends StatelessWidget {
                           message:
                               "Weak password detected\n\nIf possible, use a password with atleast an uppercase character, a lowercase character, a number, and a special character from ~`!@#\$%^&*-_+=()[]{}:;\"'<>,./|? with atleast 8 characters.",
                           onConfirm: () {
-                            encryptData(
+                            _encryptData(
                                     title: title,
                                     account: account,
                                     password: password)
@@ -196,7 +196,7 @@ class CredentialRoute extends StatelessWidget {
                           confirmIconColor: Colors.yellowAccent,
                         );
                       } else {
-                        encryptData(
+                        _encryptData(
                                 title: title,
                                 account: account,
                                 password: password)
