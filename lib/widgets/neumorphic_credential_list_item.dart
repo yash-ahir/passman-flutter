@@ -1,5 +1,6 @@
 import 'package:flutter/rendering.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
+import 'package:passman/routes/credential_route.dart';
 import 'package:passman/services/credential_database.dart';
 import 'package:passman/widgets/neumorphic_icon_button.dart';
 import 'package:clipboard/clipboard.dart';
@@ -30,7 +31,15 @@ class NeumorphicCredentialListItem extends StatelessWidget {
 
     return InkWell(
       mouseCursor: SystemMouseCursors.basic,
-      onTap: () {},
+      onTap: () {
+        Navigator.of(context).pushNamed(
+          CredentialRoute.routeName,
+          arguments: {
+            "viewMode": true,
+            "credential": credential,
+          },
+        );
+      },
       onLongPress: () {
         if (!waiting) {
           FlutterClipboard.copy(credential.account).then(

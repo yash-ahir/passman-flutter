@@ -28,6 +28,10 @@ class HomeRoute extends StatelessWidget {
       cipherText: credential.password,
       iv: credential.passwordIv,
     );
+    final note = credential.note != null
+        ? await crypt.decrypt(
+            cipherText: credential.note, iv: credential.noteIv)
+        : credential.note;
 
     return Credential(
       id: credential.id,
@@ -37,6 +41,8 @@ class HomeRoute extends StatelessWidget {
       accountIv: credential.accountIv,
       password: password,
       passwordIv: credential.passwordIv,
+      note: note,
+      noteIv: credential.noteIv,
     );
   }
 

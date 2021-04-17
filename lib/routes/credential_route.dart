@@ -67,6 +67,11 @@ class CredentialRoute extends StatelessWidget {
   Widget build(BuildContext context) {
     final database = Provider.of<AppDatabase>(context);
 
+    final routeArgs =
+        ModalRoute.of(context).settings.arguments as Map<String, Object> ?? {};
+    final viewMode = routeArgs["viewMode"] ?? false;
+    final credential = routeArgs["credential"] as Credential;
+
     String title;
     String account;
     String password;
@@ -84,7 +89,7 @@ class CredentialRoute extends StatelessWidget {
         },
       ),
       textStyle: NeumorphicTheme.currentTheme(context).textTheme.bodyText1,
-      title: Text("Add new credential"),
+      title: viewMode ? Text("Viewing credential") : Text("Add new credential"),
     );
 
     final double _defaultOuterPadding = 15;
@@ -107,6 +112,9 @@ class CredentialRoute extends StatelessWidget {
               children: [
                 Text("Title"),
                 NeumorphicTextField(
+                  readOnly: viewMode,
+                  maxLength: 128,
+                  initialValue: viewMode ? credential.title : "",
                   autovalidateMode: AutovalidateMode.onUserInteraction,
                   validator: (text) {
                     if (text.isEmpty) {
@@ -124,6 +132,9 @@ class CredentialRoute extends StatelessWidget {
                 ),
                 Text("Account"),
                 NeumorphicTextField(
+                  readOnly: viewMode,
+                  maxLength: 256,
+                  initialValue: viewMode ? credential.account : "",
                   autovalidateMode: AutovalidateMode.onUserInteraction,
                   validator: (text) {
                     if (text.isEmpty) {
@@ -141,6 +152,9 @@ class CredentialRoute extends StatelessWidget {
                 ),
                 Text("Password"),
                 NeurmophicPasswordField(
+                  readOnly: viewMode,
+                  maxLength: 256,
+                  initialValue: viewMode ? credential.password : "",
                   autovalidateMode: AutovalidateMode.onUserInteraction,
                   validator: (text) {
                     if (text.isEmpty) {
@@ -156,17 +170,22 @@ class CredentialRoute extends StatelessWidget {
                   innerPadding: _defaultInnerPadding,
                   placeholderText: "Strong or random password",
                 ),
-                NeumorphicTextButton(
-                  text: "Generate random password",
-                  icon: Icons.vpn_key,
-                  iconColor: NeumorphicTheme.accentColor(context),
-                  outerPadding: _defaultOuterPadding,
-                  innerPadding: _defaultInnerPadding,
-                  tooltip: "Generate a secure random password",
-                  onPressed: () {},
-                ),
+                viewMode
+                    ? Container()
+                    : NeumorphicTextButton(
+                        text: "Generate random password",
+                        icon: Icons.vpn_key,
+                        iconColor: NeumorphicTheme.accentColor(context),
+                        outerPadding: _defaultOuterPadding,
+                        innerPadding: _defaultInnerPadding,
+                        tooltip: "Generate a secure random password",
+                        onPressed: () {},
+                      ),
                 Text("Note (Optional)"),
                 NeumorphicTextField(
+                  readOnly: viewMode,
+                  maxLength: 512,
+                  initialValue: viewMode ? credential.note : "",
                   validator: (text) {
                     return null;
                   },
@@ -179,60 +198,62 @@ class CredentialRoute extends StatelessWidget {
                   outerPadding: _defaultOuterPadding,
                   innerPadding: _defaultInnerPadding,
                   minLines: 1,
-                  maxLines: 5,
+                  maxLines: 10,
                   placeholderText: "Additional notes about this credential",
                 ),
-                NeumorphicTextButton(
-                  text: "Add credential",
-                  icon: Icons.enhanced_encryption,
-                  iconColor: NeumorphicTheme.accentColor(context),
-                  outerPadding: _defaultOuterPadding,
-                  innerPadding: _defaultInnerPadding,
-                  tooltip: "Add this credential to PassMan",
-                  onPressed: () {
-                    if (_formKey.currentState.validate()) {
-                      _formKey.currentState.save();
+                viewMode
+                    ? Container()
+                    : NeumorphicTextButton(
+                        text: "Add credential",
+                        icon: Icons.enhanced_encryption,
+                        iconColor: NeumorphicTheme.accentColor(context),
+                        outerPadding: _defaultOuterPadding,
+                        innerPadding: _defaultInnerPadding,
+                        tooltip: "Add this credential to PassMan",
+                        onPressed: () {
+                          if (_formKey.currentState.validate()) {
+                            _formKey.currentState.save();
 
-                      final pwRegExp = RegExp(
-                        r"""^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[~`!@#$%^&*()\[\]\-|_{}\\\/+=<>,.?:;\'"]).{8,}$""",
-                        caseSensitive: false,
-                        multiLine: false,
-                      );
-
-                      if (!pwRegExp.hasMatch(password)) {
-                        Alert(context).showAlertDialog(
-                          message:
-                              "Weak password detected\n\nIf possible, use a password with atleast an uppercase character, a lowercase character, a number, and a special character from ~`!@#\$%^&*-_+=()[]{}:;\"'<>,./|? with atleast 8 characters.",
-                          onConfirm: () {
-                            _insertData(
-                              context: context,
-                              database: database,
-                              title: title,
-                              account: account,
-                              password: password,
-                              note: note,
+                            final pwRegExp = RegExp(
+                              r"""^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[~`!@#$%^&*()\[\]\-|_{}\\\/+=<>,.?:;\'"]).{8,}$""",
+                              caseSensitive: false,
+                              multiLine: false,
                             );
 
-                            Navigator.of(context).pop();
-                          },
-                          confirmText: "Ok",
-                          confirmTooltip: "Dismiss this warning",
-                          confirmIcon: Icons.warning,
-                          confirmIconColor: Colors.yellowAccent,
-                        );
-                      } else {
-                        _insertData(
-                          context: context,
-                          database: database,
-                          title: title,
-                          account: account,
-                          password: password,
-                          note: note,
-                        );
-                      }
-                    }
-                  },
-                ),
+                            if (!pwRegExp.hasMatch(password)) {
+                              Alert(context).showAlertDialog(
+                                message:
+                                    "Weak password detected\n\nIf possible, use a password with atleast an uppercase character, a lowercase character, a number, and a special character from ~`!@#\$%^&*-_+=()[]{}:;\"'<>,./|? with atleast 8 characters.",
+                                onConfirm: () {
+                                  _insertData(
+                                    context: context,
+                                    database: database,
+                                    title: title,
+                                    account: account,
+                                    password: password,
+                                    note: note,
+                                  );
+
+                                  Navigator.of(context).pop();
+                                },
+                                confirmText: "Ok",
+                                confirmTooltip: "Dismiss this warning",
+                                confirmIcon: Icons.warning,
+                                confirmIconColor: Colors.yellowAccent,
+                              );
+                            } else {
+                              _insertData(
+                                context: context,
+                                database: database,
+                                title: title,
+                                account: account,
+                                password: password,
+                                note: note,
+                              );
+                            }
+                          }
+                        },
+                      ),
               ],
             ),
           ),
