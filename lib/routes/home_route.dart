@@ -14,7 +14,7 @@ class HomeRoute extends StatelessWidget {
     @required this.title,
   });
 
-  Future<Credential> decryptData(Credential credential) async {
+  Future<Credential> _decryptData(Credential credential) async {
     final crypt = Crypt(masterPass: "Alpha Bravo Charlie Delta");
     final title = await crypt.decrypt(
       cipherText: credential.title,
@@ -94,7 +94,7 @@ class HomeRoute extends StatelessWidget {
             itemCount: credentials.length,
             itemBuilder: (ctx, index) {
               return FutureBuilder(
-                future: decryptData(credentials[index]),
+                future: _decryptData(credentials[index]),
                 builder: (ctx, AsyncSnapshot<Credential> snapshot) {
                   if (snapshot.connectionState == ConnectionState.done) {
                     return NeumorphicCredentialListItem(snapshot.data);
