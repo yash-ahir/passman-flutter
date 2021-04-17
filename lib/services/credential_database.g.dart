@@ -360,7 +360,7 @@ class $CredentialsTable extends Credentials
   @override
   GeneratedTextColumn get title => _title ??= _constructTitle();
   GeneratedTextColumn _constructTitle() {
-    return GeneratedTextColumn('title', $tableName, false, maxTextLength: 64);
+    return GeneratedTextColumn('title', $tableName, false, maxTextLength: 256);
   }
 
   final VerificationMeta _titleIvMeta = const VerificationMeta('titleIv');
@@ -378,7 +378,7 @@ class $CredentialsTable extends Credentials
   GeneratedTextColumn get account => _account ??= _constructAccount();
   GeneratedTextColumn _constructAccount() {
     return GeneratedTextColumn('account', $tableName, false,
-        maxTextLength: 128);
+        maxTextLength: 512);
   }
 
   final VerificationMeta _accountIvMeta = const VerificationMeta('accountIv');
@@ -396,7 +396,7 @@ class $CredentialsTable extends Credentials
   GeneratedTextColumn get password => _password ??= _constructPassword();
   GeneratedTextColumn _constructPassword() {
     return GeneratedTextColumn('password', $tableName, false,
-        maxTextLength: 128);
+        maxTextLength: 512);
   }
 
   final VerificationMeta _passwordIvMeta = const VerificationMeta('passwordIv');
@@ -413,7 +413,7 @@ class $CredentialsTable extends Credentials
   @override
   GeneratedTextColumn get note => _note ??= _constructNote();
   GeneratedTextColumn _constructNote() {
-    return GeneratedTextColumn('note', $tableName, true, maxTextLength: 512);
+    return GeneratedTextColumn('note', $tableName, true, maxTextLength: 1024);
   }
 
   final VerificationMeta _noteIvMeta = const VerificationMeta('noteIv');

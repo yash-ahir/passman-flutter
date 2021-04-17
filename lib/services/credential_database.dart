@@ -10,16 +10,16 @@ part 'credential_database.g.dart';
 class Credentials extends Table {
   TextColumn get id => text().withLength(max: 36)();
 
-  TextColumn get title => text().withLength(max: 64)();
+  TextColumn get title => text().withLength(max: 256)();
   TextColumn get titleIv => text().withLength(max: 32)();
 
-  TextColumn get account => text().withLength(max: 128)();
+  TextColumn get account => text().withLength(max: 512)();
   TextColumn get accountIv => text().withLength(max: 32)();
 
-  TextColumn get password => text().withLength(max: 128)();
+  TextColumn get password => text().withLength(max: 512)();
   TextColumn get passwordIv => text().withLength(max: 32)();
 
-  TextColumn get note => text().withLength(max: 512).nullable()();
+  TextColumn get note => text().withLength(max: 1024).nullable()();
   TextColumn get noteIv => text().withLength(max: 32).nullable()();
 
   @override
@@ -29,7 +29,7 @@ class Credentials extends Table {
 LazyDatabase _openConnection() {
   return LazyDatabase(() async {
     final dbDirectory = await getApplicationDocumentsDirectory();
-    final file = File(p.join(dbDirectory.path, "db.sqlite"));
+    final file = File(p.join(dbDirectory.path, "passman.sqlite"));
     return VmDatabase(file);
   });
 }
