@@ -18,10 +18,15 @@ class CredentialRoute extends StatelessWidget {
     @required String title,
     @required String account,
     @required String password,
+    String note,
   }) async {
     final titleData = await _crypt.encrypt(plainText: title);
     final accountData = await _crypt.encrypt(plainText: account);
     final passwordData = await _crypt.encrypt(plainText: password);
+    Map<String, String> noteData;
+    if (note != null) {
+      noteData = await _crypt.encrypt(plainText: note);
+    }
 
     return Credential(
       id: Uuid().v4(),
@@ -31,7 +36,31 @@ class CredentialRoute extends StatelessWidget {
       accountIv: accountData["iv"],
       password: passwordData["cipherText"],
       passwordIv: passwordData["iv"],
+      note: noteData != null ? noteData["cipherText"] : null,
+      noteIv: noteData != null ? noteData["iv"] : null,
     );
+  }
+
+  void _insertData({
+    @required BuildContext context,
+    @required AppDatabase database,
+    @required String title,
+    @required String account,
+    @required String password,
+    String note,
+  }) {
+    _encryptData(
+      title: title,
+      account: account,
+      password: password,
+      note: note,
+    ).then((credential) => database.insertCredential(credential));
+
+    Alert(context).showSnackBar(
+      message: "Credential added successfully",
+    );
+
+    Navigator.of(context).pop();
   }
 
   @override
@@ -175,17 +204,12 @@ class CredentialRoute extends StatelessWidget {
                           message:
                               "Weak password detected\n\nIf possible, use a password with atleast an uppercase character, a lowercase character, a number, and a special character from ~`!@#\$%^&*-_+=()[]{}:;\"'<>,./|? with atleast 8 characters.",
                           onConfirm: () {
-                            _encryptData(
-                                    title: title,
-                                    account: account,
-                                    password: password)
-                                .then((credential) =>
-                                    database.insertCredential(credential));
-
-                            Navigator.of(context).pop();
-
-                            Alert(context).showSnackBar(
-                              message: "Credential added successfully",
+                            _insertData(
+                              context: context,
+                              database: database,
+                              title: title,
+                              account: account,
+                              password: password,
                             );
 
                             Navigator.of(context).pop();
@@ -196,18 +220,13 @@ class CredentialRoute extends StatelessWidget {
                           confirmIconColor: Colors.yellowAccent,
                         );
                       } else {
-                        _encryptData(
-                                title: title,
-                                account: account,
-                                password: password)
-                            .then((credential) =>
-                                database.insertCredential(credential));
-
-                        Alert(context).showSnackBar(
-                          message: "Credential added successfully",
+                        _insertData(
+                          context: context,
+                          database: database,
+                          title: title,
+                          account: account,
+                          password: password,
                         );
-
-                        Navigator.of(context).pop();
                       }
                     }
                   },
