@@ -23,7 +23,7 @@ class CredentialRoute extends StatelessWidget {
     final titleData = await _crypt.encrypt(plainText: title);
     final accountData = await _crypt.encrypt(plainText: account);
     final passwordData = await _crypt.encrypt(plainText: password);
-    Map<String, String> noteData;
+    Map<String, String> noteData = {};
     if (note != null) {
       noteData = await _crypt.encrypt(plainText: note);
     }
@@ -36,8 +36,8 @@ class CredentialRoute extends StatelessWidget {
       accountIv: accountData["iv"],
       password: passwordData["cipherText"],
       passwordIv: passwordData["iv"],
-      note: noteData != null ? noteData["cipherText"] : null,
-      noteIv: noteData != null ? noteData["iv"] : null,
+      note: noteData["cipherText"],
+      noteIv: noteData["iv"],
     );
   }
 
