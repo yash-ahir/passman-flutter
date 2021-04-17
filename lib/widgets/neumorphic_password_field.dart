@@ -9,6 +9,9 @@ class NeurmophicPasswordField extends StatefulWidget {
   final void Function(String) onChanged;
   final void Function(String) onSaved;
   final AutovalidateMode autovalidateMode;
+  final bool readOnly;
+  final int maxLength;
+  final String initialValue;
 
   NeurmophicPasswordField({
     @required this.validator,
@@ -18,6 +21,9 @@ class NeurmophicPasswordField extends StatefulWidget {
     this.outerPadding = 0,
     this.innerPadding = 0,
     this.placeholderText = "",
+    this.initialValue = "",
+    this.readOnly = false,
+    this.maxLength,
   });
 
   @override
@@ -39,6 +45,9 @@ class _NeurmophicPasswordFieldState extends State<NeurmophicPasswordField> {
       innerPadding: widget.innerPadding,
       placeholderText: widget.placeholderText,
       obscureText: _obscurity,
+      initialValue: widget.initialValue,
+      readOnly: widget.readOnly,
+      maxLength: widget.maxLength,
       decoration: InputDecoration(
         suffixIcon: IconButton(
           color: NeumorphicTheme.accentColor(context),

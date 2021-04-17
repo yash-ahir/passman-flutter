@@ -4,12 +4,14 @@ import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 class NeumorphicTextField extends StatefulWidget {
   final double innerPadding;
   final double outerPadding;
+  final int maxLength;
   final int minLines;
   final int maxLines;
   final InputDecoration decoration;
   final bool obscureText;
   final String placeholderText;
   final String initialValue;
+  final bool readOnly;
   final String Function(String) validator;
   final void Function(String) onChanged;
   final void Function(String) onSaved;
@@ -21,8 +23,10 @@ class NeumorphicTextField extends StatefulWidget {
     @required this.onSaved,
     this.autovalidateMode = AutovalidateMode.disabled,
     this.initialValue = "",
+    this.readOnly = false,
     this.innerPadding = 0,
     this.outerPadding = 0,
+    this.maxLength,
     this.minLines = 1,
     this.maxLines = 1,
     this.decoration = const InputDecoration(),
@@ -69,14 +73,18 @@ class _NeumorphicTextFieldState extends State<NeumorphicTextField> {
           padding: EdgeInsets.all(this.widget.innerPadding),
           child: TextFormField(
             initialValue: widget.initialValue,
+            readOnly: widget.readOnly,
             onChanged: widget.onChanged,
             onSaved: widget.onSaved,
             validator: widget.validator,
             autovalidateMode: widget.autovalidateMode,
             focusNode: _focusNode,
+            maxLength: widget.maxLength,
             minLines: widget.minLines,
             maxLines: widget.maxLines,
             decoration: widget.decoration.copyWith(
+              helperStyle:
+                  TextStyle(color: NeumorphicTheme.accentColor(context)),
               hintText: widget.placeholderText,
               hintStyle: TextStyle(color: NeumorphicTheme.accentColor(context)),
               enabledBorder: UnderlineInputBorder(
