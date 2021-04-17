@@ -272,13 +272,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "3.1.0"
-  flutter_password_strength:
-    dependency: "direct main"
-    description:
-      name: flutter_password_strength
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "0.1.6"
   flutter_test:
     dependency: "direct dev"
     description: flutter
@@ -380,6 +373,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "4.2.1"
+  moor_db_viewer:
+    dependency: "direct dev"
+    description:
+      name: moor_db_viewer
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "3.0.0"
   moor_generator:
     dependency: "direct dev"
     description:
@@ -450,20 +450,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.11.0"
-  permission_handler:
-    dependency: "direct main"
-    description:
-      name: permission_handler
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "6.1.1"
-  permission_handler_platform_interface:
-    dependency: transitive
-    description:
-      name: permission_handler_platform_interface
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "3.1.1"
   petitparser:
     dependency: transitive
     description:
@@ -758,4 +744,4 @@ packages:
     version: "3.1.0"
 sdks:
   dart: ">=2.12.0 <3.0.0"
-  flutter: ">=1.22.0"
+  flutter: ">=1.20.0"
