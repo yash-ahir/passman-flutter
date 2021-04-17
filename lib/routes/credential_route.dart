@@ -210,6 +210,7 @@ class CredentialRoute extends StatelessWidget {
                               title: title,
                               account: account,
                               password: password,
+                              note: note,
                             );
 
                             Navigator.of(context).pop();
@@ -226,6 +227,7 @@ class CredentialRoute extends StatelessWidget {
                           title: title,
                           account: account,
                           password: password,
+                          note: note,
                         );
                       }
                     }
