@@ -2,6 +2,11 @@ import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 import 'package:passman/widgets/neumorphic_icon_button.dart';
 import 'package:passman/widgets/system_theme_picker.dart';
 
+// FOR DEVELOPMENT
+import 'package:provider/provider.dart';
+import 'package:passman/services/credential_database.dart';
+import 'package:moor_db_viewer/moor_db_viewer.dart';
+
 class SettingsRoute extends StatefulWidget {
   static String routeName = "/settings-route";
 
@@ -25,6 +30,21 @@ class _SettingsRouteState extends State<SettingsRoute> {
       ),
       textStyle: NeumorphicTheme.currentTheme(context).textTheme.bodyText1,
       title: Text("Settings"),
+      actions: [
+        // FOR DEVELOPMENT
+        NeumorphicIconButton(
+          icon: Icon(
+            Icons.developer_mode,
+            color: NeumorphicTheme.accentColor(context),
+          ),
+          tooltip: "View table",
+          onPressed: () {
+            final database = Provider.of<AppDatabase>(context, listen: false);
+            Navigator.of(context).push(
+                MaterialPageRoute(builder: (ctx) => MoorDbViewer(database)));
+          },
+        ),
+      ],
     );
 
     return Scaffold(
