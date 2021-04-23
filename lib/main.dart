@@ -1,4 +1,5 @@
 import 'package:easy_dynamic_theme/easy_dynamic_theme.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 import 'package:passman/routes/home_route.dart';
 import 'package:passman/routes/credential_route.dart';
@@ -33,6 +34,25 @@ class MyApp extends StatelessWidget {
           title: title,
         ),
         builder: (context, widget) {
+          SystemChrome.setSystemUIOverlayStyle(
+            SystemUiOverlayStyle(
+              systemNavigationBarColor: NeumorphicTheme.baseColor(context),
+              statusBarColor: NeumorphicTheme.baseColor(context),
+              statusBarBrightness: NeumorphicTheme.isUsingDark(context)
+                  ? Brightness.light
+                  : Brightness.dark,
+              statusBarIconBrightness: NeumorphicTheme.isUsingDark(context)
+                  ? Brightness.light
+                  : Brightness.dark,
+              systemNavigationBarDividerColor:
+                  NeumorphicTheme.baseColor(context),
+              systemNavigationBarIconBrightness:
+                  NeumorphicTheme.isUsingDark(context)
+                      ? Brightness.light
+                      : Brightness.dark,
+            ),
+          );
+
           return ResponsiveWrapper.builder(
             widget,
             minWidth: 450,
