@@ -35,7 +35,7 @@ class NeumorphicCredentialListItem extends StatelessWidget {
         Navigator.of(context).pushNamed(
           CredentialRoute.routeName,
           arguments: {
-            "viewMode": true,
+            "viewMode": ViewMode.read,
             "credential": credential,
           },
         );

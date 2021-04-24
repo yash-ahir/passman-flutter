@@ -9,12 +9,19 @@ import 'package:passman/widgets/neumorphic_password_field.dart';
 import 'package:provider/provider.dart';
 import 'package:uuid/uuid.dart';
 
+enum ViewMode {
+  create,
+  read,
+  update,
+}
+
 class CredentialRoute extends StatelessWidget {
   static String routeName = "/credential-route";
   final _formKey = GlobalKey<FormState>();
   final _crypt = Crypt(masterPass: "Alpha Bravo Charlie Delta");
 
   Future<Credential> _encryptData({
+    @required String id,
     @required String title,
     @required String account,
     @required String password,
@@ -29,7 +36,7 @@ class CredentialRoute extends StatelessWidget {
     }
 
     return Credential(
-      id: Uuid().v4(),
+      id: id,
       title: titleData["cipherText"],
       titleIv: titleData["iv"],
       account: accountData["cipherText"],
@@ -41,23 +48,32 @@ class CredentialRoute extends StatelessWidget {
     );
   }
 
-  void _insertData({
+  void _finalizeCredentialData({
     @required BuildContext context,
     @required AppDatabase database,
+    @required String id,
     @required String title,
     @required String account,
     @required String password,
+    @required bool update,
     String note,
   }) {
     _encryptData(
+      id: id,
       title: title,
       account: account,
       password: password,
       note: note,
-    ).then((credential) => database.insertCredential(credential));
+    ).then(
+      (credential) => update
+          ? database.updateCredential(credential)
+          : database.insertCredential(credential),
+    );
 
     Alert(context).showSnackBar(
-      message: "Credential added successfully",
+      message: update
+          ? "Credential updated successfully"
+          : "Credential added successfully",
     );
 
     Navigator.of(context).pop();
@@ -69,13 +85,43 @@ class CredentialRoute extends StatelessWidget {
 
     final routeArgs =
         ModalRoute.of(context).settings.arguments as Map<String, Object> ?? {};
-    final viewMode = routeArgs["viewMode"] ?? false;
-    final credential = routeArgs["credential"] as Credential;
+    final _viewMode = routeArgs["viewMode"] ?? ViewMode.create;
 
-    String title;
-    String account;
-    String password;
-    String note;
+    String _appBarTitle;
+    bool _fetchData;
+    bool _readOnly;
+    switch (_viewMode) {
+      case ViewMode.read:
+        {
+          _appBarTitle = "Viewing credential";
+          _readOnly = true;
+          _fetchData = true;
+        }
+        break;
+
+      case ViewMode.update:
+        {
+          _appBarTitle = "Editing credential";
+          _readOnly = false;
+          _fetchData = true;
+        }
+        break;
+
+      default:
+        {
+          _appBarTitle = "Create new credential";
+          _readOnly = false;
+          _fetchData = false;
+        }
+        break;
+    }
+
+    final _credential = routeArgs["credential"] as Credential;
+
+    String _title;
+    String _account;
+    String _password;
+    String _note;
 
     final NeumorphicAppBar appBar = NeumorphicAppBar(
       leading: NeumorphicIconButton(
@@ -89,7 +135,27 @@ class CredentialRoute extends StatelessWidget {
         },
       ),
       textStyle: NeumorphicTheme.currentTheme(context).textTheme.bodyText1,
-      title: viewMode ? Text("Viewing credential") : Text("Add new credential"),
+      title: Text(_appBarTitle),
+      actions: [
+        _readOnly
+            ? NeumorphicIconButton(
+                icon: Icon(
+                  Icons.edit,
+                  color: NeumorphicTheme.accentColor(context),
+                ),
+                tooltip: "Edit credential",
+                onPressed: () {
+                  Navigator.of(context).pushReplacementNamed(
+                    routeName,
+                    arguments: {
+                      "viewMode": ViewMode.update,
+                      "credential": _credential,
+                    },
+                  );
+                },
+              )
+            : Container(),
+      ],
     );
 
     final double _defaultOuterPadding = 15;
@@ -112,9 +178,9 @@ class CredentialRoute extends StatelessWidget {
               children: [
                 Text("Title"),
                 NeumorphicTextField(
-                  readOnly: viewMode,
+                  readOnly: _readOnly,
                   maxLength: 128,
-                  initialValue: viewMode ? credential.title : "",
+                  initialValue: _fetchData ? _credential.title : "",
                   autovalidateMode: AutovalidateMode.onUserInteraction,
                   validator: (text) {
                     if (text.isEmpty) {
@@ -124,7 +190,7 @@ class CredentialRoute extends StatelessWidget {
                   },
                   onChanged: (text) {},
                   onSaved: (text) {
-                    title = text;
+                    _title = text;
                   },
                   outerPadding: _defaultOuterPadding,
                   innerPadding: _defaultInnerPadding,
@@ -132,9 +198,9 @@ class CredentialRoute extends StatelessWidget {
                 ),
                 Text("Account"),
                 NeumorphicTextField(
-                  readOnly: viewMode,
+                  readOnly: _readOnly,
                   maxLength: 256,
-                  initialValue: viewMode ? credential.account : "",
+                  initialValue: _fetchData ? _credential.account : "",
                   autovalidateMode: AutovalidateMode.onUserInteraction,
                   validator: (text) {
                     if (text.isEmpty) {
@@ -144,7 +210,7 @@ class CredentialRoute extends StatelessWidget {
                   },
                   onChanged: (text) {},
                   onSaved: (text) {
-                    account = text;
+                    _account = text;
                   },
                   outerPadding: _defaultOuterPadding,
                   innerPadding: _defaultInnerPadding,
@@ -152,9 +218,9 @@ class CredentialRoute extends StatelessWidget {
                 ),
                 Text("Password"),
                 NeurmophicPasswordField(
-                  readOnly: viewMode,
+                  readOnly: _readOnly,
                   maxLength: 256,
-                  initialValue: viewMode ? credential.password : "",
+                  initialValue: _fetchData ? _credential.password : "",
                   autovalidateMode: AutovalidateMode.onUserInteraction,
                   validator: (text) {
                     if (text.isEmpty) {
@@ -164,13 +230,13 @@ class CredentialRoute extends StatelessWidget {
                   },
                   onChanged: (text) {},
                   onSaved: (text) {
-                    password = text;
+                    _password = text;
                   },
                   outerPadding: _defaultOuterPadding,
                   innerPadding: _defaultInnerPadding,
                   placeholderText: "Strong or random password",
                 ),
-                viewMode
+                _readOnly
                     ? Container()
                     : NeumorphicTextButton(
                         text: "Generate random password",
@@ -183,16 +249,16 @@ class CredentialRoute extends StatelessWidget {
                       ),
                 Text("Note (Optional)"),
                 NeumorphicTextField(
-                  readOnly: viewMode,
+                  readOnly: _readOnly,
                   maxLength: 512,
-                  initialValue: viewMode ? credential.note : "",
+                  initialValue: _fetchData ? _credential.note : "",
                   validator: (text) {
                     return null;
                   },
                   onChanged: (text) {},
                   onSaved: (text) {
                     if (text.isNotEmpty) {
-                      note = text;
+                      _note = text;
                     }
                   },
                   outerPadding: _defaultOuterPadding,
@@ -201,15 +267,19 @@ class CredentialRoute extends StatelessWidget {
                   maxLines: 10,
                   placeholderText: "Additional notes about this credential",
                 ),
-                viewMode
+                _readOnly
                     ? Container()
                     : NeumorphicTextButton(
-                        text: "Add credential",
+                        text: _viewMode == ViewMode.update
+                            ? "Update credential"
+                            : "Add credential",
                         icon: Icons.enhanced_encryption,
                         iconColor: NeumorphicTheme.accentColor(context),
                         outerPadding: _defaultOuterPadding,
                         innerPadding: _defaultInnerPadding,
-                        tooltip: "Add this credential to PassMan",
+                        tooltip: _viewMode == ViewMode.update
+                            ? "Update this credential with the new data"
+                            : "Add this credential to PassMan",
                         onPressed: () {
                           if (_formKey.currentState.validate()) {
                             _formKey.currentState.save();
@@ -220,18 +290,22 @@ class CredentialRoute extends StatelessWidget {
                               multiLine: false,
                             );
 
-                            if (!pwRegExp.hasMatch(password)) {
+                            if (!pwRegExp.hasMatch(_password)) {
                               Alert(context).showAlertDialog(
                                 message:
                                     "Weak password detected\n\nIf possible, use a password with atleast an uppercase character, a lowercase character, a number, and a special character from ~`!@#\$%^&*-_+=()[]{}:;\"'<>,./|? with atleast 8 characters.",
                                 onConfirm: () {
-                                  _insertData(
+                                  _finalizeCredentialData(
                                     context: context,
                                     database: database,
-                                    title: title,
-                                    account: account,
-                                    password: password,
-                                    note: note,
+                                    id: _fetchData
+                                        ? _credential.id
+                                        : Uuid().v4(),
+                                    title: _title,
+                                    account: _account,
+                                    password: _password,
+                                    note: _note,
+                                    update: _fetchData,
                                   );
 
                                   Navigator.of(context).pop();
@@ -242,13 +316,15 @@ class CredentialRoute extends StatelessWidget {
                                 confirmIconColor: Colors.yellowAccent,
                               );
                             } else {
-                              _insertData(
+                              _finalizeCredentialData(
                                 context: context,
                                 database: database,
-                                title: title,
-                                account: account,
-                                password: password,
-                                note: note,
+                                id: _fetchData ? _credential.id : Uuid().v4(),
+                                title: _title,
+                                account: _account,
+                                password: _password,
+                                note: _note,
+                                update: _fetchData,
                               );
                             }
                           }
