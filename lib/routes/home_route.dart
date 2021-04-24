@@ -95,7 +95,18 @@ class HomeRoute extends StatelessWidget {
       builder: (context, AsyncSnapshot<List<Credential>> snapshot) {
         if (snapshot.connectionState == ConnectionState.active) {
           final credentials = snapshot.data;
-
+          if (credentials.isEmpty) {
+            return Center(
+              child: Padding(
+                padding: const EdgeInsets.all(10.0),
+                child: Text(
+                  "No credentials added. Press the + button on the top-right to get started!",
+                  style:
+                      NeumorphicTheme.currentTheme(context).textTheme.bodyText1,
+                ),
+              ),
+            );
+          }
           return ListView.builder(
             itemCount: credentials.length,
             itemBuilder: (ctx, index) {
