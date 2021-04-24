@@ -101,6 +101,7 @@ class HomeRoute extends StatelessWidget {
                 padding: const EdgeInsets.all(10.0),
                 child: Text(
                   "No credentials added. Press the + button on the top-right to get started!",
+                  textAlign: TextAlign.center,
                   style:
                       NeumorphicTheme.currentTheme(context).textTheme.bodyText1,
                 ),
