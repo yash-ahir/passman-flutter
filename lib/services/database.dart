@@ -4,7 +4,7 @@ import 'package:path_provider/path_provider.dart';
 import 'package:path/path.dart' as p;
 import 'dart:io';
 
-part 'credential_database.g.dart';
+part 'database.g.dart';
 
 @DataClassName("Credential")
 class Credentials extends Table {
@@ -26,15 +26,24 @@ class Credentials extends Table {
   Set<Column> get primaryKey => {id};
 }
 
+@DataClassName("MasterPassword")
+class MasterPasswords extends Table {
+  TextColumn get hashedPassword => text().withLength(max: 256)();
+  TextColumn get salt => text().withLength(max: 32)();
+
+  @override
+  Set<Column> get primaryKey => {hashedPassword};
+}
+
 LazyDatabase _openConnection() {
   return LazyDatabase(() async {
     final dbDirectory = await getApplicationDocumentsDirectory();
     final file = File(p.join(dbDirectory.path, "passman.sqlite"));
-    return VmDatabase(file);
+    return VmDatabase(file, logStatements: true);
   });
 }
 
-@UseMoor(tables: [Credentials])
+@UseMoor(tables: [Credentials, MasterPasswords])
 class AppDatabase extends _$AppDatabase {
   AppDatabase() : super(_openConnection());
 
@@ -49,4 +58,9 @@ class AppDatabase extends _$AppDatabase {
       update(credentials).replace(credential);
   Future deleteCredential(Credential credential) =>
       delete(credentials).delete(credential);
+
+  Future<MasterPassword> getMasterPassword() =>
+      select(masterPasswords).getSingle();
+  Future insertMasterPassword(MasterPassword masterPassword) =>
+      into(masterPasswords).insert(masterPassword);
 }

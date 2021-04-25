@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'credential_database.dart';
+part of 'database.dart';
 
 // **************************************************************************
 // MoorGenerator
@@ -515,12 +515,213 @@ class $CredentialsTable extends Credentials
   }
 }
 
+class MasterPassword extends DataClass implements Insertable<MasterPassword> {
+  final String hashedPassword;
+  final String salt;
+  MasterPassword({@required this.hashedPassword, @required this.salt});
+  factory MasterPassword.fromData(
+      Map<String, dynamic> data, GeneratedDatabase db,
+      {String prefix}) {
+    final effectivePrefix = prefix ?? '';
+    final stringType = db.typeSystem.forDartType<String>();
+    return MasterPassword(
+      hashedPassword: stringType
+          .mapFromDatabaseResponse(data['${effectivePrefix}hashed_password']),
+      salt: stringType.mapFromDatabaseResponse(data['${effectivePrefix}salt']),
+    );
+  }
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (!nullToAbsent || hashedPassword != null) {
+      map['hashed_password'] = Variable<String>(hashedPassword);
+    }
+    if (!nullToAbsent || salt != null) {
+      map['salt'] = Variable<String>(salt);
+    }
+    return map;
+  }
+
+  MasterPasswordsCompanion toCompanion(bool nullToAbsent) {
+    return MasterPasswordsCompanion(
+      hashedPassword: hashedPassword == null && nullToAbsent
+          ? const Value.absent()
+          : Value(hashedPassword),
+      salt: salt == null && nullToAbsent ? const Value.absent() : Value(salt),
+    );
+  }
+
+  factory MasterPassword.fromJson(Map<String, dynamic> json,
+      {ValueSerializer serializer}) {
+    serializer ??= moorRuntimeOptions.defaultSerializer;
+    return MasterPassword(
+      hashedPassword: serializer.fromJson<String>(json['hashedPassword']),
+      salt: serializer.fromJson<String>(json['salt']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer serializer}) {
+    serializer ??= moorRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'hashedPassword': serializer.toJson<String>(hashedPassword),
+      'salt': serializer.toJson<String>(salt),
+    };
+  }
+
+  MasterPassword copyWith({String hashedPassword, String salt}) =>
+      MasterPassword(
+        hashedPassword: hashedPassword ?? this.hashedPassword,
+        salt: salt ?? this.salt,
+      );
+  @override
+  String toString() {
+    return (StringBuffer('MasterPassword(')
+          ..write('hashedPassword: $hashedPassword, ')
+          ..write('salt: $salt')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => $mrjf($mrjc(hashedPassword.hashCode, salt.hashCode));
+  @override
+  bool operator ==(dynamic other) =>
+      identical(this, other) ||
+      (other is MasterPassword &&
+          other.hashedPassword == this.hashedPassword &&
+          other.salt == this.salt);
+}
+
+class MasterPasswordsCompanion extends UpdateCompanion<MasterPassword> {
+  final Value<String> hashedPassword;
+  final Value<String> salt;
+  const MasterPasswordsCompanion({
+    this.hashedPassword = const Value.absent(),
+    this.salt = const Value.absent(),
+  });
+  MasterPasswordsCompanion.insert({
+    @required String hashedPassword,
+    @required String salt,
+  })  : hashedPassword = Value(hashedPassword),
+        salt = Value(salt);
+  static Insertable<MasterPassword> custom({
+    Expression<String> hashedPassword,
+    Expression<String> salt,
+  }) {
+    return RawValuesInsertable({
+      if (hashedPassword != null) 'hashed_password': hashedPassword,
+      if (salt != null) 'salt': salt,
+    });
+  }
+
+  MasterPasswordsCompanion copyWith(
+      {Value<String> hashedPassword, Value<String> salt}) {
+    return MasterPasswordsCompanion(
+      hashedPassword: hashedPassword ?? this.hashedPassword,
+      salt: salt ?? this.salt,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (hashedPassword.present) {
+      map['hashed_password'] = Variable<String>(hashedPassword.value);
+    }
+    if (salt.present) {
+      map['salt'] = Variable<String>(salt.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('MasterPasswordsCompanion(')
+          ..write('hashedPassword: $hashedPassword, ')
+          ..write('salt: $salt')
+          ..write(')'))
+        .toString();
+  }
+}
+
+class $MasterPasswordsTable extends MasterPasswords
+    with TableInfo<$MasterPasswordsTable, MasterPassword> {
+  final GeneratedDatabase _db;
+  final String _alias;
+  $MasterPasswordsTable(this._db, [this._alias]);
+  final VerificationMeta _hashedPasswordMeta =
+      const VerificationMeta('hashedPassword');
+  GeneratedTextColumn _hashedPassword;
+  @override
+  GeneratedTextColumn get hashedPassword =>
+      _hashedPassword ??= _constructHashedPassword();
+  GeneratedTextColumn _constructHashedPassword() {
+    return GeneratedTextColumn('hashed_password', $tableName, false,
+        maxTextLength: 256);
+  }
+
+  final VerificationMeta _saltMeta = const VerificationMeta('salt');
+  GeneratedTextColumn _salt;
+  @override
+  GeneratedTextColumn get salt => _salt ??= _constructSalt();
+  GeneratedTextColumn _constructSalt() {
+    return GeneratedTextColumn('salt', $tableName, false, maxTextLength: 32);
+  }
+
+  @override
+  List<GeneratedColumn> get $columns => [hashedPassword, salt];
+  @override
+  $MasterPasswordsTable get asDslTable => this;
+  @override
+  String get $tableName => _alias ?? 'master_passwords';
+  @override
+  final String actualTableName = 'master_passwords';
+  @override
+  VerificationContext validateIntegrity(Insertable<MasterPassword> instance,
+      {bool isInserting = false}) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('hashed_password')) {
+      context.handle(
+          _hashedPasswordMeta,
+          hashedPassword.isAcceptableOrUnknown(
+              data['hashed_password'], _hashedPasswordMeta));
+    } else if (isInserting) {
+      context.missing(_hashedPasswordMeta);
+    }
+    if (data.containsKey('salt')) {
+      context.handle(
+          _saltMeta, salt.isAcceptableOrUnknown(data['salt'], _saltMeta));
+    } else if (isInserting) {
+      context.missing(_saltMeta);
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {hashedPassword};
+  @override
+  MasterPassword map(Map<String, dynamic> data, {String tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : null;
+    return MasterPassword.fromData(data, _db, prefix: effectivePrefix);
+  }
+
+  @override
+  $MasterPasswordsTable createAlias(String alias) {
+    return $MasterPasswordsTable(_db, alias);
+  }
+}
+
 abstract class _$AppDatabase extends GeneratedDatabase {
   _$AppDatabase(QueryExecutor e) : super(SqlTypeSystem.defaultInstance, e);
   $CredentialsTable _credentials;
   $CredentialsTable get credentials => _credentials ??= $CredentialsTable(this);
+  $MasterPasswordsTable _masterPasswords;
+  $MasterPasswordsTable get masterPasswords =>
+      _masterPasswords ??= $MasterPasswordsTable(this);
   @override
   Iterable<TableInfo> get allTables => allSchemaEntities.whereType<TableInfo>();
   @override
-  List<DatabaseSchemaEntity> get allSchemaEntities => [credentials];
+  List<DatabaseSchemaEntity> get allSchemaEntities =>
+      [credentials, masterPasswords];
 }
