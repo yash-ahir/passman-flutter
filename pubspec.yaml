@@ -36,9 +36,6 @@ dependencies:
   encrypt: ^5.0.0
   # Library for providing password based key derivation functions.
   pinenacl: ^0.2.0
-  # Allows to use a route as an app lock, which can be used for authentication
-  # on application startup and after pause/resume by switching applications..
-  flutter_app_lock: ^1.4.0+1
   # Allows support for scaling/resizing the application contents as per the
   # defined breakpoints.
   responsive_framework: ^0.1.0
