@@ -54,20 +54,22 @@ class Crypt {
     return plainText;
   }
 
-  /// The hash method takes the master password and hashes it with 50000 rounds
+  /// The hash method takes the master password and optionally a salt value, hashes it with 50000 rounds
   /// of PBKDF2 with SHA256 as HMAC. It returns a map of base64 encoded
   /// hashed master password and salt.
   ///
   /// Note that to prevent the UI thread from being blocked, this method should
   /// always be offloaded to a separate isolate with the [compute] function.
-  static Future<Map<String, String>> hash(String masterPass) async {
-    final salt = EncryptLib.IV.fromSecureRandom(16);
+  static Future<Map<String, String>> hash(List args) async {
+    final salt = args.length > 1
+        ? EncryptLib.IV.fromBase64(args[1])
+        : EncryptLib.IV.fromSecureRandom(16);
 
-    final hashedMasterPass = HashLib.PBKDF2
-        .hmac_sha256(utf8.encode(masterPass), salt.bytes, 50000, 32);
+    final hashedMasterPass =
+        HashLib.PBKDF2.hmac_sha256(utf8.encode(args[0]), salt.bytes, 50000, 32);
 
     return {
-      "hashedMasterPass": base64.encode(hashedMasterPass),
+      "hashedMasterPassword": base64.encode(hashedMasterPass),
       "salt": salt.base64,
     };
   }
