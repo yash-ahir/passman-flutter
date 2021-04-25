@@ -6,6 +6,9 @@ class Alert {
 
   Alert(this.context);
 
+  final _defaultOuterPadding = 15.0;
+  final _defaultInnerPadding = 15.0;
+
   void showSnackBar({
     @required String message,
   }) {
@@ -27,9 +30,9 @@ class Alert {
       ),
       backgroundColor: NeumorphicTheme.currentTheme(context).shadowLightColor,
       behavior: SnackBarBehavior.floating,
-      margin: const EdgeInsets.all(10),
-      padding: const EdgeInsets.symmetric(horizontal: 10),
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+      margin: const EdgeInsets.all(10.0),
+      padding: const EdgeInsets.symmetric(horizontal: 10.0),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
     );
 
     ScaffoldMessenger.of(context).showSnackBar(_snackBar);
@@ -71,8 +74,8 @@ class Alert {
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
                 NeumorphicTextButton(
-                  innerPadding: 10,
-                  outerPadding: 10,
+                  innerPadding: _defaultInnerPadding,
+                  outerPadding: _defaultOuterPadding,
                   text: confirmText,
                   tooltip: confirmTooltip,
                   onPressed: onConfirm,
@@ -80,8 +83,8 @@ class Alert {
                   iconColor: confirmIconColor,
                 ),
                 NeumorphicTextButton(
-                  innerPadding: 10,
-                  outerPadding: 10,
+                  innerPadding: _defaultInnerPadding,
+                  outerPadding: _defaultOuterPadding,
                   text: cancelText,
                   tooltip: cancelTooltip,
                   onPressed: onCancel,
@@ -119,7 +122,7 @@ class Alert {
             ),
           ),
           shape:
-              RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
           backgroundColor:
               NeumorphicTheme.currentTheme(context).shadowLightColor,
           children: [
@@ -127,8 +130,8 @@ class Alert {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 NeumorphicTextButton(
-                  innerPadding: 10,
-                  outerPadding: 10,
+                  innerPadding: _defaultInnerPadding,
+                  outerPadding: _defaultOuterPadding,
                   text: confirmText,
                   tooltip: confirmTooltip,
                   onPressed: onConfirm,
@@ -137,6 +140,33 @@ class Alert {
                 ),
               ],
             ),
+          ],
+        );
+      },
+    );
+  }
+
+  void showLoadingDialog({@required String message}) {
+    showDialog(
+      context: context,
+      builder: (ctx) {
+        return SimpleDialog(
+          title: Text(
+            message,
+            style: TextStyle(
+              fontSize: NeumorphicTheme.currentTheme(context)
+                  .textTheme
+                  .headline6
+                  .fontSize,
+              color: NeumorphicTheme.defaultTextColor(context),
+            ),
+          ),
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
+          backgroundColor:
+              NeumorphicTheme.currentTheme(context).shadowLightColor,
+          children: [
+            LinearProgressIndicator(),
           ],
         );
       },
