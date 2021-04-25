@@ -4,7 +4,7 @@ import 'package:passman/widgets/system_theme_picker.dart';
 
 // FOR DEVELOPMENT
 import 'package:provider/provider.dart';
-import 'package:passman/services/credential_database.dart';
+import 'package:passman/services/database.dart';
 import 'package:moor_db_viewer/moor_db_viewer.dart';
 
 class SettingsRoute extends StatefulWidget {
