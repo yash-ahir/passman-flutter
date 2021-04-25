@@ -37,7 +37,7 @@ class MasterPasswords extends Table {
 
 LazyDatabase _openConnection() {
   return LazyDatabase(() async {
-    final dbDirectory = await getApplicationDocumentsDirectory();
+    final dbDirectory = await getApplicationSupportDirectory();
     final file = File(p.join(dbDirectory.path, "passman.sqlite"));
     return VmDatabase(file, logStatements: true);
   });
