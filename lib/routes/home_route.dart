@@ -8,6 +8,8 @@ import 'package:passman/services/credential_database.dart';
 import 'package:provider/provider.dart';
 
 class HomeRoute extends StatelessWidget {
+  static String routeName = "/home-route";
+
   final String title;
 
   HomeRoute({
