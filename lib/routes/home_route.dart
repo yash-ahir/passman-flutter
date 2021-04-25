@@ -1,10 +1,11 @@
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
+import 'package:passman/models/unhashed_password.dart';
 import 'package:passman/routes/credential_route.dart';
 import 'package:passman/routes/settings_route.dart';
 import 'package:passman/services/crypt.dart';
 import 'package:passman/widgets/neumorphic_icon_button.dart';
 import 'package:passman/widgets/neumorphic_credential_list_item.dart';
-import 'package:passman/services/credential_database.dart';
+import 'package:passman/services/database.dart';
 import 'package:provider/provider.dart';
 
 class HomeRoute extends StatelessWidget {
@@ -16,8 +17,11 @@ class HomeRoute extends StatelessWidget {
     @required this.title,
   });
 
-  Future<Credential> _decryptData(Credential credential) async {
-    final crypt = Crypt(masterPass: "Alpha Bravo Charlie Delta");
+  Future<Credential> _decryptData(
+      BuildContext context, Credential credential) async {
+    final crypt = Crypt(
+      masterPass: Provider.of<UnhashedPassword>(context).getUnhashedPassword(),
+    );
     final title = await crypt.decrypt(
       cipherText: credential.title,
       iv: credential.titleIv,
@@ -50,11 +54,11 @@ class HomeRoute extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final NeumorphicAppBar appBar = NeumorphicAppBar(
+    final appBar = NeumorphicAppBar(
       textStyle: NeumorphicTheme.currentTheme(context).textTheme.bodyText1,
       leading: Image.asset("assets/images/logo.png"),
       title: Text(title),
-      actionSpacing: 20,
+      actionSpacing: 20.0,
       actions: [
         NeumorphicIconButton(
           tooltip: "Application settings",
@@ -114,7 +118,7 @@ class HomeRoute extends StatelessWidget {
             itemCount: credentials.length,
             itemBuilder: (ctx, index) {
               return FutureBuilder(
-                future: _decryptData(credentials[index]),
+                future: _decryptData(context, credentials[index]),
                 builder: (ctx, AsyncSnapshot<Credential> snapshot) {
                   if (snapshot.connectionState == ConnectionState.done) {
                     return NeumorphicCredentialListItem(snapshot.data);
