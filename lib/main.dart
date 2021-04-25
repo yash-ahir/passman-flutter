@@ -5,12 +5,14 @@ import 'package:passman/models/unhashed_password.dart';
 import 'package:passman/routes/credential_route.dart';
 import 'package:passman/routes/home_route.dart';
 import 'package:passman/routes/lock_screen_route.dart';
+import 'package:passman/routes/onboarding_route.dart';
 import 'package:passman/routes/settings_route.dart';
 import 'package:passman/services/app_locker.dart';
 import 'package:passman/services/database.dart';
 import 'package:passman/themes/theme.dart';
 import 'package:provider/provider.dart';
 import 'package:responsive_framework/responsive_framework.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 void main() => runApp(
       EasyDynamicThemeWidget(
@@ -21,7 +23,7 @@ void main() => runApp(
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    final String _title = "PassMan";
+    final _title = "PassMan";
 
     return MultiProvider(
       providers: [
@@ -39,13 +41,26 @@ class MyApp extends StatelessWidget {
         debugShowCheckedModeBanner: false,
         title: _title,
         routes: {
+          HomeRoute.routeName: (ctx) => HomeRoute(title: _title),
           SettingsRoute.routeName: (ctx) => SettingsRoute(),
           CredentialRoute.routeName: (ctx) => CredentialRoute(),
         },
-        home: AppLocker(
-          appRouteBuilder: (_) => HomeRoute(title: _title),
-          lockScreenBuilder: (_, unlocker) =>
-              LockScreenRoute(title: _title, unlocker: unlocker),
+        home: FutureBuilder(
+          future: SharedPreferences.getInstance(),
+          builder: (_, AsyncSnapshot<SharedPreferences> snapshot) {
+            if (snapshot.connectionState == ConnectionState.done) {
+              if (snapshot.data.getBool("onboardingComplete") == null) {
+                return OnboardingRoute(title: _title);
+              }
+              return AppLocker(
+                appRouteBuilder: (_) => HomeRoute(title: _title),
+                lockScreenBuilder: (_, unlocker) =>
+                    LockScreenRoute(title: _title, unlocker: unlocker),
+              );
+            }
+
+            return Container();
+          },
         ),
         builder: (context, widget) {
           SystemChrome.setSystemUIOverlayStyle(
