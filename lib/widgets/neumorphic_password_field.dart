@@ -1,7 +1,7 @@
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 import 'package:passman/widgets/neumorphic_text_field.dart';
 
-class NeurmophicPasswordField extends StatefulWidget {
+class NeumorphicPasswordField extends StatefulWidget {
   final double outerPadding;
   final double innerPadding;
   final String placeholderText;
@@ -13,7 +13,7 @@ class NeurmophicPasswordField extends StatefulWidget {
   final int maxLength;
   final String initialValue;
 
-  NeurmophicPasswordField({
+  NeumorphicPasswordField({
     @required this.validator,
     @required this.onChanged,
     @required this.onSaved,
@@ -27,11 +27,11 @@ class NeurmophicPasswordField extends StatefulWidget {
   });
 
   @override
-  _NeurmophicPasswordFieldState createState() =>
-      _NeurmophicPasswordFieldState();
+  _NeumorphicPasswordFieldState createState() =>
+      _NeumorphicPasswordFieldState();
 }
 
-class _NeurmophicPasswordFieldState extends State<NeurmophicPasswordField> {
+class _NeumorphicPasswordFieldState extends State<NeumorphicPasswordField> {
   bool _obscurity = true;
 
   @override

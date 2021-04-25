@@ -1,7 +1,7 @@
 import 'package:flutter/rendering.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 import 'package:passman/routes/credential_route.dart';
-import 'package:passman/services/credential_database.dart';
+import 'package:passman/services/database.dart';
 import 'package:passman/widgets/neumorphic_icon_button.dart';
 import 'package:clipboard/clipboard.dart';
 import 'package:provider/provider.dart';
@@ -15,9 +15,9 @@ class NeumorphicCredentialListItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final _database = Provider.of<AppDatabase>(context);
+    final database = Provider.of<AppDatabase>(context);
 
-    final _titleTextStyle = TextStyle(
+    final titleTextStyle = TextStyle(
       fontSize:
           NeumorphicTheme.currentTheme(context).textTheme.headline6.fontSize,
       color: NeumorphicTheme.defaultTextColor(context),
@@ -52,8 +52,8 @@ class NeumorphicCredentialListItem extends StatelessWidget {
       splashColor: NeumorphicTheme.currentTheme(context).accentColor,
       child: Neumorphic(
         drawSurfaceAboveChild: false,
-        margin: const EdgeInsets.all(10),
-        padding: const EdgeInsets.all(10),
+        margin: const EdgeInsets.all(10.0),
+        padding: const EdgeInsets.all(10.0),
         style: NeumorphicStyle(
           lightSource: NeumorphicTheme.currentTheme(context).lightSource,
           depth: -5,
@@ -62,9 +62,9 @@ class NeumorphicCredentialListItem extends StatelessWidget {
           title: waiting
               ? Text(
                   "■ ■ ■",
-                  style: _titleTextStyle,
+                  style: titleTextStyle,
                 )
-              : Text(credential.title, style: _titleTextStyle),
+              : Text(credential.title, style: titleTextStyle),
           subtitle: waiting
               ? Text(
                   "● ● ● ● ● ●",
@@ -112,7 +112,7 @@ class NeumorphicCredentialListItem extends StatelessWidget {
                           message:
                               "Delete credential? This action cannot be undone!",
                           onConfirm: () {
-                            _database.deleteCredential(credential);
+                            database.deleteCredential(credential);
                             Navigator.of(context).pop();
                           },
                           confirmText: "Yes",
