@@ -12,6 +12,7 @@ class NeumorphicPasswordField extends StatefulWidget {
   final bool readOnly;
   final int maxLength;
   final String initialValue;
+  final TextEditingController controller;
 
   NeumorphicPasswordField({
     @required this.validator,
@@ -24,6 +25,7 @@ class NeumorphicPasswordField extends StatefulWidget {
     this.initialValue = "",
     this.readOnly = false,
     this.maxLength,
+    this.controller,
   });
 
   @override
@@ -37,6 +39,7 @@ class _NeumorphicPasswordFieldState extends State<NeumorphicPasswordField> {
   @override
   Widget build(BuildContext context) {
     return NeumorphicTextField(
+      controller: widget.controller,
       autovalidateMode: widget.autovalidateMode,
       onChanged: widget.onChanged,
       onSaved: widget.onSaved,

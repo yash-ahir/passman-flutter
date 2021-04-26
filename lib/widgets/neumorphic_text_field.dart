@@ -16,6 +16,8 @@ class NeumorphicTextField extends StatefulWidget {
   final void Function(String) onChanged;
   final void Function(String) onSaved;
   final AutovalidateMode autovalidateMode;
+  final TextInputType keyboardType;
+  final TextEditingController controller;
 
   NeumorphicTextField({
     @required this.validator,
@@ -32,6 +34,8 @@ class NeumorphicTextField extends StatefulWidget {
     this.decoration = const InputDecoration(),
     this.obscureText = false,
     this.placeholderText = "",
+    this.keyboardType,
+    this.controller,
   });
 
   @override
@@ -72,7 +76,9 @@ class _NeumorphicTextFieldState extends State<NeumorphicTextField> {
           ),
           padding: EdgeInsets.all(this.widget.innerPadding),
           child: TextFormField(
+            keyboardType: widget.keyboardType,
             initialValue: widget.initialValue,
+            controller: widget.controller,
             readOnly: widget.readOnly,
             onChanged: widget.onChanged,
             onSaved: widget.onSaved,
