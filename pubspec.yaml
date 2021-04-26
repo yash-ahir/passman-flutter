@@ -39,6 +39,8 @@ dependencies:
   # Allows support for scaling/resizing the application contents as per the
   # defined breakpoints.
   responsive_framework: ^0.1.0
+  # A simple animated number picker widget.
+  numberpicker: ^2.1.1
   # The Neumorphic theming library.
   flutter_neumorphic: ^3.1.0
   # A simple and powerful state management library.
