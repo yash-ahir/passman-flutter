@@ -166,7 +166,13 @@ class Alert {
           backgroundColor:
               NeumorphicTheme.currentTheme(context).shadowLightColor,
           children: [
-            LinearProgressIndicator(),
+            SizedBox(
+              child: NeumorphicProgressIndeterminate(
+                height: 15.0,
+              ),
+              height: 15.0,
+              width: 30.0,
+            ),
           ],
         );
       },
