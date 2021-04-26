@@ -1,9 +1,14 @@
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
+import 'package:passman/models/app_startup.dart';
+import 'package:provider/provider.dart';
 
 class AppLocker extends StatefulWidget {
   final Widget Function(BuildContext context) appRouteBuilder;
-  final Widget Function(BuildContext context, void Function() unlocker)
-      lockScreenBuilder;
+
+  final Widget Function(
+    BuildContext context,
+    void Function() unlocker,
+  ) lockScreenBuilder;
 
   AppLocker({
     @required this.appRouteBuilder,
@@ -15,10 +20,14 @@ class AppLocker extends StatefulWidget {
 }
 
 class _AppLockerState extends State<AppLocker> with WidgetsBindingObserver {
+  bool _startUp;
+  bool _inBackground;
+
   @override
   void initState() {
     super.initState();
     WidgetsBinding.instance.addObserver(this);
+    _inBackground = false;
   }
 
   @override
@@ -27,9 +36,6 @@ class _AppLockerState extends State<AppLocker> with WidgetsBindingObserver {
     super.dispose();
   }
 
-  bool _startUp = true;
-  bool _inBackground = false;
-
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
     if (state == AppLifecycleState.paused) {
@@ -37,10 +43,12 @@ class _AppLockerState extends State<AppLocker> with WidgetsBindingObserver {
         _inBackground = true;
       });
     }
+    super.didChangeAppLifecycleState(state);
   }
 
   void unlockApp() {
     setState(() {
+      Provider.of<AppStartup>(context, listen: false).setValue(false);
       _startUp = false;
       _inBackground = false;
     });
@@ -48,6 +56,8 @@ class _AppLockerState extends State<AppLocker> with WidgetsBindingObserver {
 
   @override
   Widget build(BuildContext context) {
+    _startUp = Provider.of<AppStartup>(context).getValue();
+
     return (_startUp || _inBackground)
         ? widget.lockScreenBuilder(context, unlockApp)
         : widget.appRouteBuilder(context);

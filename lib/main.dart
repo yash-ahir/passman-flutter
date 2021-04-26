@@ -1,6 +1,7 @@
 import 'package:easy_dynamic_theme/easy_dynamic_theme.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
+import 'package:passman/models/app_startup.dart';
 import 'package:passman/models/unhashed_password.dart';
 import 'package:passman/routes/credential_route.dart';
 import 'package:passman/routes/home_route.dart';
@@ -32,6 +33,9 @@ class MyApp extends StatelessWidget {
         ),
         ChangeNotifierProvider<UnhashedPassword>(
           create: (_) => UnhashedPassword(),
+        ),
+        ChangeNotifierProvider<AppStartup>(
+          create: (_) => AppStartup(),
         ),
       ],
       child: NeumorphicApp(
