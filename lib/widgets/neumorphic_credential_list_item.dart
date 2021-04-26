@@ -114,6 +114,8 @@ class NeumorphicCredentialListItem extends StatelessWidget {
                           onConfirm: () {
                             database.deleteCredential(credential);
                             Navigator.of(context).pop();
+                            Alert(context).showSnackBar(
+                                message: "Credential deleted successfully");
                           },
                           confirmText: "Yes",
                           confirmTooltip: "Permanently delete this credential",
