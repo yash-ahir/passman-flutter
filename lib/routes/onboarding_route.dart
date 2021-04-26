@@ -151,7 +151,7 @@ class OnboardingRoute extends StatelessWidget {
                             Navigator.pop(context);
                           },
                           confirmText: "Ok",
-                          confirmTooltip: "Dismiss this dialog",
+                          confirmTooltip: "Dismiss this message",
                           confirmIcon: Icons.error,
                           confirmIconColor: Colors.red,
                         );
@@ -176,7 +176,7 @@ class OnboardingRoute extends StatelessWidget {
                               Navigator.pop(context);
                             },
                             confirmText: "Ok",
-                            confirmTooltip: "Dismiss this dialog",
+                            confirmTooltip: "Dismiss this warning",
                             confirmIcon: Icons.error,
                             confirmIconColor: Colors.red,
                           );
