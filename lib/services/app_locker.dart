@@ -27,6 +27,7 @@ class _AppLockerState extends State<AppLocker> with WidgetsBindingObserver {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addObserver(this);
+    _startUp = Provider.of<AppStartup>(context).getValue();
     _inBackground = false;
   }
 
@@ -56,8 +57,6 @@ class _AppLockerState extends State<AppLocker> with WidgetsBindingObserver {
 
   @override
   Widget build(BuildContext context) {
-    _startUp = Provider.of<AppStartup>(context).getValue();
-
     return (_startUp || _inBackground)
         ? widget.lockScreenBuilder(context, unlockApp)
         : widget.appRouteBuilder(context);
