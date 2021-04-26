@@ -4,9 +4,9 @@ import 'package:passman/services/database.dart';
 import 'package:passman/services/crypt.dart';
 import 'package:passman/widgets/alert.dart';
 import 'package:passman/widgets/neumorphic_icon_button.dart';
+import 'package:passman/widgets/neumorphic_password_field_with_generator.dart';
 import 'package:passman/widgets/neumorphic_text_button.dart';
 import 'package:passman/widgets/neumorphic_text_field.dart';
-import 'package:passman/widgets/neumorphic_password_field.dart';
 import 'package:provider/provider.dart';
 import 'package:uuid/uuid.dart';
 
@@ -223,44 +223,22 @@ class CredentialRoute extends StatelessWidget {
                   placeholderText: "Account name (e.g. E-mail, username, etc.)",
                 ),
                 Text("Password"),
-                NeumorphicPasswordField(
+                NeumorphicPasswordFieldWithGenerator(
                   readOnly: readOnly,
-                  maxLength: 256,
-                  initialValue: fetchData ? credential.password : "",
-                  autovalidateMode: AutovalidateMode.onUserInteraction,
-                  validator: (text) {
-                    if (text.isEmpty) {
-                      return "Enter or generate a password";
-                    }
-                    return null;
-                  },
-                  onChanged: (text) {},
+                  fetchData: fetchData,
+                  defaultInnerPadding: defaultInnerPadding,
+                  defaultOuterPadding: defaultOuterPadding,
+                  credential: credential,
                   onSaved: (text) {
                     password = text;
                   },
-                  outerPadding: defaultOuterPadding,
-                  innerPadding: defaultInnerPadding,
-                  placeholderText: "Strong or random password",
                 ),
-                readOnly
-                    ? Container()
-                    : NeumorphicTextButton(
-                        text: "Generate random password",
-                        icon: Icons.vpn_key,
-                        iconColor: NeumorphicTheme.accentColor(context),
-                        outerPadding: defaultOuterPadding,
-                        innerPadding: defaultInnerPadding,
-                        tooltip: "Generate a secure random password",
-                        onPressed: () {},
-                      ),
                 Text("Note (Optional)"),
                 NeumorphicTextField(
                   readOnly: readOnly,
                   maxLength: 512,
                   initialValue: fetchData ? credential.note : "",
-                  validator: (text) {
-                    return null;
-                  },
+                  validator: (text) => null,
                   onChanged: (text) {},
                   onSaved: (text) {
                     if (text.isNotEmpty) {
