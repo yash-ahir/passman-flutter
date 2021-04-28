@@ -74,7 +74,7 @@ class _NeumorphicTextFieldState extends State<NeumorphicTextField> {
             lightSource: NeumorphicTheme.currentTheme(context).lightSource,
             depth: _depth,
           ),
-          padding: EdgeInsets.all(this.widget.innerPadding),
+          padding: EdgeInsets.all(widget.innerPadding),
           child: TextFormField(
             keyboardType: widget.keyboardType,
             initialValue: widget.initialValue,
