@@ -3,8 +3,8 @@ import 'package:passman/models/unhashed_password.dart';
 import 'package:passman/routes/credential_route.dart';
 import 'package:passman/routes/settings_route.dart';
 import 'package:passman/services/crypt.dart';
+import 'package:passman/widgets/neumorphic_credential_list.dart';
 import 'package:passman/widgets/neumorphic_icon_button.dart';
-import 'package:passman/widgets/neumorphic_credential_list_item.dart';
 import 'package:passman/services/database.dart';
 import 'package:provider/provider.dart';
 
@@ -17,39 +17,48 @@ class HomeRoute extends StatelessWidget {
     @required this.title,
   });
 
-  Future<Credential> _decryptData(
-      BuildContext context, Credential credential) async {
+  Future<List<Credential>> _decryptData(
+      BuildContext context, List<Credential> encryptedCredentials) async {
     final crypt = Crypt(
       masterPass: Provider.of<UnhashedPassword>(context).getUnhashedPassword(),
     );
-    final title = await crypt.decrypt(
-      cipherText: credential.title,
-      iv: credential.titleIv,
-    );
-    final account = await crypt.decrypt(
-      cipherText: credential.account,
-      iv: credential.accountIv,
-    );
-    final password = await crypt.decrypt(
-      cipherText: credential.password,
-      iv: credential.passwordIv,
-    );
-    final note = credential.note != null
-        ? await crypt.decrypt(
-            cipherText: credential.note, iv: credential.noteIv)
-        : credential.note;
 
-    return Credential(
-      id: credential.id,
-      title: title,
-      titleIv: credential.titleIv,
-      account: account,
-      accountIv: credential.accountIv,
-      password: password,
-      passwordIv: credential.passwordIv,
-      note: note,
-      noteIv: credential.noteIv,
-    );
+    List<Credential> credentials = [];
+
+    for (Credential credential in encryptedCredentials) {
+      final title = await crypt.decrypt(
+        cipherText: credential.title,
+        iv: credential.titleIv,
+      );
+      final account = await crypt.decrypt(
+        cipherText: credential.account,
+        iv: credential.accountIv,
+      );
+      final password = await crypt.decrypt(
+        cipherText: credential.password,
+        iv: credential.passwordIv,
+      );
+      final note = credential.note != null
+          ? await crypt.decrypt(
+              cipherText: credential.note, iv: credential.noteIv)
+          : credential.note;
+
+      credentials.add(
+        Credential(
+          id: credential.id,
+          title: title,
+          titleIv: credential.titleIv,
+          account: account,
+          accountIv: credential.accountIv,
+          password: password,
+          passwordIv: credential.passwordIv,
+          note: note,
+          noteIv: credential.noteIv,
+        ),
+      );
+    }
+
+    return credentials;
   }
 
   @override
@@ -101,6 +110,7 @@ class HomeRoute extends StatelessWidget {
       builder: (context, AsyncSnapshot<List<Credential>> snapshot) {
         if (snapshot.connectionState == ConnectionState.active) {
           final credentials = snapshot.data;
+
           if (credentials.isEmpty) {
             return Center(
               child: Padding(
@@ -114,27 +124,18 @@ class HomeRoute extends StatelessWidget {
               ),
             );
           }
-          return Scrollbar(
-            isAlwaysShown: true,
-            interactive: true,
-            showTrackOnHover: true,
-            child: ListView.builder(
-              itemCount: credentials.length,
-              itemBuilder: (ctx, index) {
-                return FutureBuilder(
-                  future: _decryptData(context, credentials[index]),
-                  builder: (ctx, AsyncSnapshot<Credential> snapshot) {
-                    if (snapshot.connectionState == ConnectionState.done) {
-                      return NeumorphicCredentialListItem(snapshot.data);
-                    }
-                    return NeumorphicCredentialListItem(
-                      snapshot.data,
-                      waiting: true,
-                    );
-                  },
+
+          return FutureBuilder(
+            future: _decryptData(context, credentials),
+            builder: (ctx, AsyncSnapshot<List<Credential>> snapshot) {
+              if (snapshot.connectionState == ConnectionState.done) {
+                return NeumorphicCredentialList(
+                  credentials: snapshot.data,
                 );
-              },
-            ),
+              }
+
+              return Center(child: CircularProgressIndicator());
+            },
           );
         }
 
