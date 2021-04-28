@@ -177,144 +177,152 @@ class CredentialRoute extends StatelessWidget {
       },
       child: Scaffold(
         appBar: appBar,
-        body: SingleChildScrollView(
-          child: Form(
-            key: _formKey,
-            child: Column(
-              children: [
-                Text("Title"),
-                NeumorphicTextField(
-                  readOnly: readOnly,
-                  maxLength: 128,
-                  initialValue: fetchData ? credential.title : "",
-                  autovalidateMode: AutovalidateMode.onUserInteraction,
-                  validator: (text) {
-                    if (text.isEmpty) {
-                      return "Enter the title";
-                    }
-                    return null;
-                  },
-                  onChanged: (text) {},
-                  onSaved: (text) {
-                    title = text;
-                  },
-                  outerPadding: defaultOuterPadding,
-                  innerPadding: defaultInnerPadding,
-                  placeholderText: "Title/name of credential",
-                ),
-                Text("Account"),
-                NeumorphicTextField(
-                  readOnly: readOnly,
-                  maxLength: 256,
-                  initialValue: fetchData ? credential.account : "",
-                  autovalidateMode: AutovalidateMode.onUserInteraction,
-                  validator: (text) {
-                    if (text.isEmpty) {
-                      return "Enter the account name";
-                    }
-                    return null;
-                  },
-                  onChanged: (text) {},
-                  onSaved: (text) {
-                    account = text;
-                  },
-                  outerPadding: defaultOuterPadding,
-                  innerPadding: defaultInnerPadding,
-                  placeholderText: "Account name (e.g. E-mail, username, etc.)",
-                ),
-                Text("Password"),
-                NeumorphicPasswordFieldWithGenerator(
-                  readOnly: readOnly,
-                  fetchData: fetchData,
-                  defaultInnerPadding: defaultInnerPadding,
-                  defaultOuterPadding: defaultOuterPadding,
-                  credential: credential,
-                  onSaved: (text) {
-                    password = text;
-                  },
-                ),
-                Text("Note (Optional)"),
-                NeumorphicTextField(
-                  readOnly: readOnly,
-                  maxLength: 512,
-                  initialValue: fetchData ? credential.note : "",
-                  validator: (text) => null,
-                  onChanged: (text) {},
-                  onSaved: (text) {
-                    if (text.isNotEmpty) {
-                      note = text;
-                    }
-                  },
-                  outerPadding: defaultOuterPadding,
-                  innerPadding: defaultInnerPadding,
-                  minLines: 1,
-                  maxLines: 10,
-                  placeholderText: "Additional notes about this credential",
-                ),
-                readOnly
-                    ? Container()
-                    : NeumorphicTextButton(
-                        text: viewMode == ViewMode.update
-                            ? "Update credential"
-                            : "Add credential",
-                        icon: Icons.enhanced_encryption,
-                        iconColor: NeumorphicTheme.accentColor(context),
-                        outerPadding: defaultOuterPadding,
-                        innerPadding: defaultInnerPadding,
-                        tooltip: viewMode == ViewMode.update
-                            ? "Update this credential with the new data"
-                            : "Add this credential to PassMan",
-                        onPressed: () {
-                          if (_formKey.currentState.validate()) {
-                            _formKey.currentState.save();
+        body: Scrollbar(
+          isAlwaysShown: true,
+          interactive: true,
+          showTrackOnHover: true,
+          child: SingleChildScrollView(
+            child: Form(
+              key: _formKey,
+              child: Column(
+                children: [
+                  Text("Title"),
+                  NeumorphicTextField(
+                    readOnly: readOnly,
+                    maxLength: 128,
+                    initialValue: fetchData ? credential.title : "",
+                    autovalidateMode: AutovalidateMode.onUserInteraction,
+                    validator: (text) {
+                      if (text.isEmpty) {
+                        return "Enter the title";
+                      }
+                      return null;
+                    },
+                    onChanged: (text) {},
+                    onSaved: (text) {
+                      title = text;
+                    },
+                    outerPadding: defaultOuterPadding,
+                    innerPadding: defaultInnerPadding,
+                    placeholderText: "Title/name of credential",
+                  ),
+                  Text("Account"),
+                  NeumorphicTextField(
+                    readOnly: readOnly,
+                    maxLength: 256,
+                    initialValue: fetchData ? credential.account : "",
+                    autovalidateMode: AutovalidateMode.onUserInteraction,
+                    validator: (text) {
+                      if (text.isEmpty) {
+                        return "Enter the account name";
+                      }
+                      return null;
+                    },
+                    onChanged: (text) {},
+                    onSaved: (text) {
+                      account = text;
+                    },
+                    outerPadding: defaultOuterPadding,
+                    innerPadding: defaultInnerPadding,
+                    placeholderText:
+                        "Account name (e.g. E-mail, username, etc.)",
+                  ),
+                  Text("Password"),
+                  NeumorphicPasswordFieldWithGenerator(
+                    readOnly: readOnly,
+                    fetchData: fetchData,
+                    defaultInnerPadding: defaultInnerPadding,
+                    defaultOuterPadding: defaultOuterPadding,
+                    credential: credential,
+                    onSaved: (text) {
+                      password = text;
+                    },
+                  ),
+                  Text("Note (Optional)"),
+                  NeumorphicTextField(
+                    readOnly: readOnly,
+                    maxLength: 512,
+                    initialValue: fetchData ? credential.note : "",
+                    validator: (text) => null,
+                    onChanged: (text) {},
+                    onSaved: (text) {
+                      if (text.isNotEmpty) {
+                        note = text;
+                      }
+                    },
+                    outerPadding: defaultOuterPadding,
+                    innerPadding: defaultInnerPadding,
+                    minLines: 1,
+                    maxLines: 10,
+                    placeholderText: "Additional notes about this credential",
+                  ),
+                  readOnly
+                      ? Container()
+                      : NeumorphicTextButton(
+                          text: viewMode == ViewMode.update
+                              ? "Update credential"
+                              : "Add credential",
+                          icon: Icons.enhanced_encryption,
+                          iconColor: NeumorphicTheme.accentColor(context),
+                          outerPadding: defaultOuterPadding,
+                          innerPadding: defaultInnerPadding,
+                          tooltip: viewMode == ViewMode.update
+                              ? "Update this credential with the new data"
+                              : "Add this credential to PassMan",
+                          onPressed: () {
+                            if (_formKey.currentState.validate()) {
+                              _formKey.currentState.save();
 
-                            final pwRegExp = RegExp(
-                              r"""^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[~`!@#$%^&*()\[\]\-|_{}\\\/+=<>,.?:;\'"]).{8,}$""",
-                              caseSensitive: false,
-                              multiLine: false,
-                            );
-
-                            if (!pwRegExp.hasMatch(password)) {
-                              Alert(context).showAlertDialog(
-                                message:
-                                    "Weak password detected\n\nIf possible, use a password with atleast an uppercase character, a lowercase character, a number, and a special character from ~`!@#\$%^&*-_+=()[]{}:;\"'<>,./|? with atleast 8 characters.",
-                                onConfirm: () {
-                                  _finalizeCredentialData(
-                                    context: context,
-                                    database: database,
-                                    crypt: crypt,
-                                    id: fetchData ? credential.id : Uuid().v4(),
-                                    title: title,
-                                    account: account,
-                                    password: password,
-                                    note: note,
-                                    update: fetchData,
-                                  );
-
-                                  Navigator.of(context).pop();
-                                },
-                                confirmText: "Ok",
-                                confirmTooltip: "Dismiss this warning",
-                                confirmIcon: Icons.warning,
-                                confirmIconColor: Colors.yellowAccent,
+                              final pwRegExp = RegExp(
+                                r"""^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[~`!@#$%^&*()\[\]\-|_{}\\\/+=<>,.?:;\'"]).{8,}$""",
+                                caseSensitive: false,
+                                multiLine: false,
                               );
-                            } else {
-                              _finalizeCredentialData(
-                                context: context,
-                                database: database,
-                                crypt: crypt,
-                                id: fetchData ? credential.id : Uuid().v4(),
-                                title: title,
-                                account: account,
-                                password: password,
-                                note: note,
-                                update: fetchData,
-                              );
+
+                              if (!pwRegExp.hasMatch(password)) {
+                                Alert(context).showAlertDialog(
+                                  message:
+                                      "Weak password detected\n\nIf possible, use a password with atleast an uppercase character, a lowercase character, a number, and a special character from ~`!@#\$%^&*-_+=()[]{}:;\"'<>,./|? with atleast 8 characters.",
+                                  onConfirm: () {
+                                    _finalizeCredentialData(
+                                      context: context,
+                                      database: database,
+                                      crypt: crypt,
+                                      id: fetchData
+                                          ? credential.id
+                                          : Uuid().v4(),
+                                      title: title,
+                                      account: account,
+                                      password: password,
+                                      note: note,
+                                      update: fetchData,
+                                    );
+
+                                    Navigator.of(context).pop();
+                                  },
+                                  confirmText: "Ok",
+                                  confirmTooltip: "Dismiss this warning",
+                                  confirmIcon: Icons.warning,
+                                  confirmIconColor: Colors.yellowAccent,
+                                );
+                              } else {
+                                _finalizeCredentialData(
+                                  context: context,
+                                  database: database,
+                                  crypt: crypt,
+                                  id: fetchData ? credential.id : Uuid().v4(),
+                                  title: title,
+                                  account: account,
+                                  password: password,
+                                  note: note,
+                                  update: fetchData,
+                                );
+                              }
                             }
-                          }
-                        },
-                      ),
-              ],
+                          },
+                        ),
+                ],
+              ),
             ),
           ),
         ),

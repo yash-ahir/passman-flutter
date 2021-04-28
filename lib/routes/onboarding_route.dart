@@ -78,121 +78,127 @@ class OnboardingRoute extends StatelessWidget {
       },
       child: Scaffold(
         appBar: appBar,
-        body: SingleChildScrollView(
-          child: Form(
-            key: _formKey,
-            child: Column(
-              children: [
-                Text(
-                  "Welcome To PassMan!",
-                  textAlign: TextAlign.center,
-                  style:
-                      NeumorphicTheme.currentTheme(context).textTheme.bodyText1,
-                ),
-                SizedBox(height: 10.0),
-                Padding(
-                  padding: const EdgeInsets.all(15.0),
-                  child: Text(
-                    "It seems you're starting the application for the first time, please set a strong master password to proceed.",
+        body: Scrollbar(
+          isAlwaysShown: true,
+          interactive: true,
+          showTrackOnHover: true,
+          child: SingleChildScrollView(
+            child: Form(
+              key: _formKey,
+              child: Column(
+                children: [
+                  Text(
+                    "Welcome To PassMan!",
                     textAlign: TextAlign.center,
+                    style: NeumorphicTheme.currentTheme(context)
+                        .textTheme
+                        .bodyText1,
                   ),
-                ),
-                SizedBox(height: 35.0),
-                Text("Master Password"),
-                NeumorphicPasswordField(
-                  readOnly: false,
-                  maxLength: 32,
-                  initialValue: "",
-                  autovalidateMode: AutovalidateMode.onUserInteraction,
-                  validator: (text) {
-                    if (text.isEmpty) {
-                      return "Enter your master password to proceed";
-                    }
-                    return null;
-                  },
-                  onChanged: (text) {},
-                  onSaved: (text) {
-                    password = text;
-                  },
-                  outerPadding: defaultOuterPadding,
-                  innerPadding: defaultInnerPadding,
-                  placeholderText: "Your master password",
-                ),
-                Text("Confirm Master Password"),
-                NeumorphicPasswordField(
-                  readOnly: false,
-                  maxLength: 32,
-                  initialValue: "",
-                  autovalidateMode: AutovalidateMode.onUserInteraction,
-                  validator: (text) {
-                    if (text.isEmpty) {
-                      return "Enter your master password again to confirm";
-                    }
-                    return null;
-                  },
-                  onChanged: (text) {},
-                  onSaved: (text) {
-                    confirmPassword = text;
-                  },
-                  outerPadding: defaultOuterPadding,
-                  innerPadding: defaultInnerPadding,
-                  placeholderText: "Your master password",
-                ),
-                NeumorphicTextButton(
-                  text: "Set Master Password",
-                  onPressed: () {
-                    if (_formKey.currentState.validate()) {
-                      _formKey.currentState.save();
+                  SizedBox(height: 10.0),
+                  Padding(
+                    padding: const EdgeInsets.all(15.0),
+                    child: Text(
+                      "It seems you're starting the application for the first time, please set a strong master password to proceed.",
+                      textAlign: TextAlign.center,
+                    ),
+                  ),
+                  SizedBox(height: 35.0),
+                  Text("Master Password"),
+                  NeumorphicPasswordField(
+                    readOnly: false,
+                    maxLength: 32,
+                    initialValue: "",
+                    autovalidateMode: AutovalidateMode.onUserInteraction,
+                    validator: (text) {
+                      if (text.isEmpty) {
+                        return "Enter your master password to proceed";
+                      }
+                      return null;
+                    },
+                    onChanged: (text) {},
+                    onSaved: (text) {
+                      password = text;
+                    },
+                    outerPadding: defaultOuterPadding,
+                    innerPadding: defaultInnerPadding,
+                    placeholderText: "Your master password",
+                  ),
+                  Text("Confirm Master Password"),
+                  NeumorphicPasswordField(
+                    readOnly: false,
+                    maxLength: 32,
+                    initialValue: "",
+                    autovalidateMode: AutovalidateMode.onUserInteraction,
+                    validator: (text) {
+                      if (text.isEmpty) {
+                        return "Enter your master password again to confirm";
+                      }
+                      return null;
+                    },
+                    onChanged: (text) {},
+                    onSaved: (text) {
+                      confirmPassword = text;
+                    },
+                    outerPadding: defaultOuterPadding,
+                    innerPadding: defaultInnerPadding,
+                    placeholderText: "Your master password",
+                  ),
+                  NeumorphicTextButton(
+                    text: "Set Master Password",
+                    onPressed: () {
+                      if (_formKey.currentState.validate()) {
+                        _formKey.currentState.save();
 
-                      if (password != confirmPassword) {
-                        Alert(context).showAlertDialog(
-                          message: "Passwords do not match, try again.",
-                          onConfirm: () {
-                            Navigator.pop(context);
-                          },
-                          confirmText: "Ok",
-                          confirmTooltip: "Dismiss this message",
-                          confirmIcon: Icons.error,
-                          confirmIconColor: Colors.red,
-                        );
-                      } else {
-                        final shortPwRegExp = RegExp(
-                          r"""^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[~`!@#$%^&*()\[\]\-|_{}\\\/+=<>,.?:;\'"]).{8,}$""",
-                          caseSensitive: false,
-                          multiLine: false,
-                        );
-                        final longPwRegExp = RegExp(
-                          r"""^(?=.*?[A-Z])(?=.*?[a-z]).{24,}$""",
-                          caseSensitive: false,
-                          multiLine: false,
-                        );
-
-                        if (!(shortPwRegExp.hasMatch(password) ||
-                            longPwRegExp.hasMatch(password))) {
+                        if (password != confirmPassword) {
                           Alert(context).showAlertDialog(
-                            message:
-                                "Weak password detected\n\n\nUse a password with atleast an uppercase character, a lowercase character, a number, and a special character from ~`!@#\$%^&*-_+=()[]{}:;\"'<>,./|? with atleast 16 characters.\n\nOr with an uppercase character and a lowercase character if longer than 24.\n\nMaximum length is 32 characters.",
+                            message: "Passwords do not match, try again.",
                             onConfirm: () {
                               Navigator.pop(context);
                             },
                             confirmText: "Ok",
-                            confirmTooltip: "Dismiss this warning",
+                            confirmTooltip: "Dismiss this message",
                             confirmIcon: Icons.error,
                             confirmIconColor: Colors.red,
                           );
                         } else {
-                          _storeMasterPassword(context, password);
+                          final shortPwRegExp = RegExp(
+                            r"""^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[~`!@#$%^&*()\[\]\-|_{}\\\/+=<>,.?:;\'"]).{8,}$""",
+                            caseSensitive: false,
+                            multiLine: false,
+                          );
+                          final longPwRegExp = RegExp(
+                            r"""^(?=.*?[A-Z])(?=.*?[a-z]).{24,}$""",
+                            caseSensitive: false,
+                            multiLine: false,
+                          );
+
+                          if (!(shortPwRegExp.hasMatch(password) ||
+                              longPwRegExp.hasMatch(password))) {
+                            Alert(context).showAlertDialog(
+                              message:
+                                  "Weak password detected\n\n\nUse a password with atleast an uppercase character, a lowercase character, a number, and a special character from ~`!@#\$%^&*-_+=()[]{}:;\"'<>,./|? with atleast 16 characters.\n\nOr with an uppercase character and a lowercase character if longer than 24.\n\nMaximum length is 32 characters.",
+                              onConfirm: () {
+                                Navigator.pop(context);
+                              },
+                              confirmText: "Ok",
+                              confirmTooltip: "Dismiss this warning",
+                              confirmIcon: Icons.error,
+                              confirmIconColor: Colors.red,
+                            );
+                          } else {
+                            _storeMasterPassword(context, password);
+                          }
                         }
                       }
-                    }
-                  },
-                  icon: Icons.enhanced_encryption,
-                  iconColor: NeumorphicTheme.accentColor(context),
-                  outerPadding: defaultOuterPadding,
-                  innerPadding: defaultInnerPadding,
-                  tooltip: "Set a master password",
-                ),
-              ],
+                    },
+                    icon: Icons.enhanced_encryption,
+                    iconColor: NeumorphicTheme.accentColor(context),
+                    outerPadding: defaultOuterPadding,
+                    innerPadding: defaultInnerPadding,
+                    tooltip: "Set a master password",
+                  ),
+                ],
+              ),
             ),
           ),
         ),

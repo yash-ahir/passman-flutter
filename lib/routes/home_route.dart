@@ -114,22 +114,27 @@ class HomeRoute extends StatelessWidget {
               ),
             );
           }
-          return ListView.builder(
-            itemCount: credentials.length,
-            itemBuilder: (ctx, index) {
-              return FutureBuilder(
-                future: _decryptData(context, credentials[index]),
-                builder: (ctx, AsyncSnapshot<Credential> snapshot) {
-                  if (snapshot.connectionState == ConnectionState.done) {
-                    return NeumorphicCredentialListItem(snapshot.data);
-                  }
-                  return NeumorphicCredentialListItem(
-                    snapshot.data,
-                    waiting: true,
-                  );
-                },
-              );
-            },
+          return Scrollbar(
+            isAlwaysShown: true,
+            interactive: true,
+            showTrackOnHover: true,
+            child: ListView.builder(
+              itemCount: credentials.length,
+              itemBuilder: (ctx, index) {
+                return FutureBuilder(
+                  future: _decryptData(context, credentials[index]),
+                  builder: (ctx, AsyncSnapshot<Credential> snapshot) {
+                    if (snapshot.connectionState == ConnectionState.done) {
+                      return NeumorphicCredentialListItem(snapshot.data);
+                    }
+                    return NeumorphicCredentialListItem(
+                      snapshot.data,
+                      waiting: true,
+                    );
+                  },
+                );
+              },
+            ),
           );
         }
 
