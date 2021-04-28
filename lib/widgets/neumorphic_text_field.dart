@@ -1,4 +1,5 @@
 import 'package:flutter/rendering.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 
 class NeumorphicTextField extends StatefulWidget {
@@ -102,6 +103,13 @@ class _NeumorphicTextFieldState extends State<NeumorphicTextField> {
               ),
             ),
             obscureText: widget.obscureText,
+            inputFormatters: [
+              FilteringTextInputFormatter.allow(
+                RegExp(
+                  """[\x00-\x7F]""",
+                ),
+              )
+            ],
             style: TextStyle(
               fontSize: NeumorphicTheme.currentTheme(context)
                   .textTheme
