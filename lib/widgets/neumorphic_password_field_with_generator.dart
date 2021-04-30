@@ -75,12 +75,28 @@ class _NeumorphicPasswordFieldWithGeneratorState
                   innerPadding: widget.defaultInnerPadding,
                   tooltip: "Generate a secure random password",
                   onPressed: () {
-                    _passwordFieldController.text =
-                        RandomPasswordGenerator.generateRandomString(
-                      length: _currentValue,
+                    final pwRegExp = RegExp(
+                      r"""^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[~`!@#$%^&*()\[\]\-|_{}\\\/+=<>,.?:;\'"]).{8,}$""",
+                      caseSensitive: false,
+                      multiLine: false,
                     );
+
+                    String generatedPasword = "";
+
+                    while (!pwRegExp.hasMatch(generatedPasword)) {
+                      generatedPasword =
+                          RandomPasswordGenerator.generateRandomString(
+                        length: _currentValue,
+                      );
+                    }
+
+                    _passwordFieldController.text = generatedPasword;
                   },
                 ),
+          SizedBox(height: 15.0),
+          widget.readOnly
+              ? Container()
+              : Text("Slide to select password length"),
           SizedBox(height: 15.0),
           widget.readOnly
               ? Container()

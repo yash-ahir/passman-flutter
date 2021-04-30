@@ -272,17 +272,22 @@ class CredentialRoute extends StatelessWidget {
                           onPressed: () {
                             if (_formKey.currentState.validate()) {
                               _formKey.currentState.save();
-
-                              final pwRegExp = RegExp(
+                              final shortPwRegExp = RegExp(
                                 r"""^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[~`!@#$%^&*()\[\]\-|_{}\\\/+=<>,.?:;\'"]).{8,}$""",
                                 caseSensitive: false,
                                 multiLine: false,
                               );
+                              final longPwRegExp = RegExp(
+                                r"""^(?=.*?[A-Z])(?=.*?[a-z]).{24,}$""",
+                                caseSensitive: false,
+                                multiLine: false,
+                              );
 
-                              if (!pwRegExp.hasMatch(password)) {
+                              if (!(shortPwRegExp.hasMatch(password) ||
+                                  longPwRegExp.hasMatch(password))) {
                                 Alert(context).showAlertDialog(
                                   message:
-                                      "Weak password detected\n\nIf possible, use a password with atleast an uppercase character, a lowercase character, a number, and a special character from ~`!@#\$%^&*-_+=()[]{}:;\"'<>,./|? with atleast 8 characters.",
+                                      "Weak password detected\n\n\nUse a password with atleast an uppercase character, a lowercase character, a number, and a special character from ~`!@#\$%^&*-_+=()[]{}:;\"'<>,./|? with atleast 16 characters.\n\nOr with an uppercase character and a lowercase character if longer than 24.\n\nMaximum length is 32 characters.",
                                   onConfirm: () {
                                     _finalizeCredentialData(
                                       context: context,
