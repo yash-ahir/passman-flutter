@@ -9,9 +9,8 @@ import 'alert.dart';
 
 class NeumorphicCredentialListItem extends StatelessWidget {
   final Credential credential;
-  final bool waiting;
 
-  NeumorphicCredentialListItem(this.credential, {this.waiting = false});
+  NeumorphicCredentialListItem(this.credential);
 
   @override
   Widget build(BuildContext context) {
@@ -41,13 +40,11 @@ class NeumorphicCredentialListItem extends StatelessWidget {
         );
       },
       onLongPress: () {
-        if (!waiting) {
-          FlutterClipboard.copy(credential.account).then(
-            (value) => Alert(context).showSnackBar(
-              message: "Account copied to clipboard.",
-            ),
-          );
-        }
+        FlutterClipboard.copy(credential.account).then(
+          (value) => Alert(context).showSnackBar(
+            message: "Account copied to clipboard.",
+          ),
+        );
       },
       splashColor: NeumorphicTheme.currentTheme(context).accentColor,
       child: Neumorphic(
@@ -59,81 +56,67 @@ class NeumorphicCredentialListItem extends StatelessWidget {
           depth: -5,
         ),
         child: ListTile(
-          title: waiting
-              ? Text(
-                  "■ ■ ■",
-                  style: titleTextStyle,
-                )
-              : Text(credential.title, style: titleTextStyle),
-          subtitle: waiting
-              ? Text(
-                  "● ● ● ● ● ●",
-                  style: _subtitleTextStyle,
-                )
-              : Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      credential.account,
-                      style: _subtitleTextStyle,
-                    )
-                  ],
+          title: Text(credential.title, style: titleTextStyle),
+          subtitle: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                credential.account,
+                style: _subtitleTextStyle,
+              )
+            ],
+          ),
+          trailing: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              NeumorphicIconButton(
+                icon: Icon(
+                  Icons.copy,
+                  color: NeumorphicTheme.accentColor(context),
                 ),
-          trailing: waiting
-              ? Text("◣ ◥")
-              : Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    NeumorphicIconButton(
-                      icon: Icon(
-                        Icons.copy,
-                        color: NeumorphicTheme.accentColor(context),
-                      ),
-                      tooltip: "Copy password to clipboard",
-                      onPressed: () {
-                        FlutterClipboard.copy(credential.password).then(
-                          (value) => Alert(context).showSnackBar(
-                            message: "Password copied to clipboard.",
-                          ),
-                        );
-                      },
+                tooltip: "Copy password to clipboard",
+                onPressed: () {
+                  FlutterClipboard.copy(credential.password).then(
+                    (value) => Alert(context).showSnackBar(
+                      message: "Password copied to clipboard.",
                     ),
-                    SizedBox(
-                      width: 20,
-                    ),
-                    NeumorphicIconButton(
-                      icon: Icon(
-                        Icons.delete,
-                        color: NeumorphicTheme.accentColor(context),
-                      ),
-                      tooltip: "Delete credential",
-                      onPressed: () {
-                        Alert(context).showActionDialog(
-                          message:
-                              "Delete credential? This action cannot be undone!",
-                          onConfirm: () {
-                            database.deleteCredential(credential);
-                            Navigator.of(context).pop();
-                            Alert(context).showSnackBar(
-                                message: "Credential deleted successfully");
-                          },
-                          confirmText: "Yes",
-                          confirmTooltip: "Permanently delete this credential",
-                          confirmIcon: Icons.delete,
-                          confirmIconColor: Colors.red,
-                          onCancel: () {
-                            Navigator.of(context).pop();
-                          },
-                          cancelText: "No",
-                          cancelTooltip: "Dismiss this message",
-                          cancelIcon: Icons.cancel,
-                          cancelIconColor:
-                              NeumorphicTheme.defaultTextColor(context),
-                        );
-                      },
-                    )
-                  ],
+                  );
+                },
+              ),
+              SizedBox(
+                width: 20,
+              ),
+              NeumorphicIconButton(
+                icon: Icon(
+                  Icons.delete,
+                  color: NeumorphicTheme.accentColor(context),
                 ),
+                tooltip: "Delete credential",
+                onPressed: () {
+                  Alert(context).showActionDialog(
+                    message: "Delete credential? This action cannot be undone!",
+                    onConfirm: () {
+                      database.deleteCredential(credential);
+                      Navigator.of(context).pop();
+                      Alert(context).showSnackBar(
+                          message: "Credential deleted successfully");
+                    },
+                    confirmText: "Yes",
+                    confirmTooltip: "Permanently delete this credential",
+                    confirmIcon: Icons.delete,
+                    confirmIconColor: Colors.red,
+                    onCancel: () {
+                      Navigator.of(context).pop();
+                    },
+                    cancelText: "No",
+                    cancelTooltip: "Dismiss this message",
+                    cancelIcon: Icons.cancel,
+                    cancelIconColor: NeumorphicTheme.defaultTextColor(context),
+                  );
+                },
+              )
+            ],
+          ),
         ),
       ),
     );
