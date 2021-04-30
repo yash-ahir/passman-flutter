@@ -46,7 +46,6 @@ class _NeumorphicCredentialListState extends State<NeumorphicCredentialList> {
                             ),
                   )
                   .toList();
-              print(credentials.length);
             });
           },
           onSaved: (text) {},
