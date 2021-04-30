@@ -41,7 +41,7 @@ class NeumorphicTextButton extends StatelessWidget {
                   color: iconColor,
                 ),
                 SizedBox(
-                  width: (MediaQuery.of(context).size.width * 0.025),
+                  width: 15.0,
                 ),
                 Text(
                   text,
@@ -49,7 +49,7 @@ class NeumorphicTextButton extends StatelessWidget {
               ],
             ),
           ),
-          onPressed: () => onPressed(),
+          onPressed: onPressed,
           style: style,
         ),
       ),
