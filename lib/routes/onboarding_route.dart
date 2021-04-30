@@ -162,7 +162,7 @@ class OnboardingRoute extends StatelessWidget {
                           );
                         } else {
                           final shortPwRegExp = RegExp(
-                            r"""^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[~`!@#$%^&*()\[\]\-|_{}\\\/+=<>,.?:;\'"]).{8,}$""",
+                            r"""^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[~`!@#$%^&*()\[\]\-|_{}\\\/+=<>,.?:;\'"]).{16,}$""",
                             caseSensitive: false,
                             multiLine: false,
                           );
