@@ -51,6 +51,8 @@ dependencies:
   shared_preferences: ^2.0.5
   # Simple dynamic theming library.
   easy_dynamic_theme: ^2.0.0
+  # Launcher to redirect to URLs.
+  url_launcher: ^6.0.3
 
 
   # The following adds the Cupertino Icons font to your application.
