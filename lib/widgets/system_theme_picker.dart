@@ -20,39 +20,21 @@ class _SystemThemePickerState extends State<SystemThemePicker> {
       padding: const EdgeInsets.symmetric(horizontal: 30),
       child: Column(
         children: [
-          Text("Application theme"),
+          Text(
+            "Application theme",
+            style: NeumorphicTheme.currentTheme(context).textTheme.bodyText1,
+          ),
           SizedBox(
             height: _defaultContentSpacing,
           ),
-          // Row(
-          //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          //   children: [
-          //     Text("Follow system default"),
-          //     NeumorphicRadio(
-          //       onChanged: (value) {
-          //         setState(() {
-          //           _groupValue = value;
-          //         });
-          //         EasyDynamicTheme.of(context).changeTheme(dynamic: true);
-          //       },
-          //       padding: _defaultRadioPadding,
-          //       value: ThemeMode.system,
-          //       groupValue: _groupValue,
-          //       child: Icon(
-          //         Icons.check,
-          //         color: NeumorphicTheme.accentColor(context),
-          //       ),
-          //     ),
-          //   ],
-          // ),
-          // SizedBox(
-          //   height: _defaultContentSpacing,
-          // ),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text("Light theme"),
               NeumorphicRadio(
+                style: NeumorphicRadioStyle(
+                  lightSource: LightSource.topLeft,
+                ),
                 isEnabled: !(currentThemeMode == "ThemeMode.light"),
                 onChanged: (value) {
                   setState(() {
