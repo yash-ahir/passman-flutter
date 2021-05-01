@@ -50,6 +50,7 @@ class _SettingsRouteState extends State<SettingsRoute> {
             ),
             NeumorphicTextButton(
               text: "Github Repository",
+              tooltip: "Redirect to the GitHub repository of PassMan",
               icon: Icons.source,
               iconColor: NeumorphicTheme.accentColor(context),
               innerPadding: _defaultInnerPadding,
@@ -70,6 +71,7 @@ class _SettingsRouteState extends State<SettingsRoute> {
             ),
             NeumorphicTextButton(
               text: "More about me on my website",
+              tooltip: "Redirect to my website",
               icon: Icons.person,
               iconColor: NeumorphicTheme.accentColor(context),
               innerPadding: _defaultInnerPadding,
@@ -80,6 +82,7 @@ class _SettingsRouteState extends State<SettingsRoute> {
             ),
             NeumorphicTextButton(
               text: "Send me an E-mail",
+              tooltip: "Open your default E-mail client",
               icon: Icons.email,
               iconColor: NeumorphicTheme.accentColor(context),
               innerPadding: _defaultInnerPadding,
