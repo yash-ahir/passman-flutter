@@ -1,7 +1,7 @@
 import 'package:encrypt/encrypt.dart';
 import 'package:flutter/foundation.dart';
 import 'package:passman/models/app_state.dart';
-import 'package:passman/models/unhashed_password.dart';
+import 'package:passman/models/plain_text_password_data.dart';
 import 'package:passman/routes/home_route.dart';
 import 'package:passman/services/crypt.dart';
 import 'package:passman/services/database.dart';
@@ -38,10 +38,10 @@ class OnboardingRoute extends StatelessWidget {
         sharedPreferences.setBool("onboardingComplete", true);
         Provider.of<AppState>(context, listen: false).setStartUp(false);
 
-        Provider.of<UnhashedPassword>(
+        Provider.of<PlainTextPasswordData>(
           context,
           listen: false,
-        ).setUnhashedPassword(password);
+        ).setUnhashedMasterPassword(password);
 
         Navigator.of(context).pushReplacementNamed(HomeRoute.routeName);
       },

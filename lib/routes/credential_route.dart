@@ -1,5 +1,5 @@
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
-import 'package:passman/models/unhashed_password.dart';
+import 'package:passman/models/plain_text_password_data.dart';
 import 'package:passman/services/database.dart';
 import 'package:passman/services/crypt.dart';
 import 'package:passman/widgets/alert.dart';
@@ -86,7 +86,8 @@ class CredentialRoute extends StatelessWidget {
   Widget build(BuildContext context) {
     final database = Provider.of<AppDatabase>(context);
     final crypt = Crypt(
-      masterPass: Provider.of<UnhashedPassword>(context).getUnhashedPassword(),
+      masterPass: Provider.of<PlainTextPasswordData>(context)
+          .getUnhashedMasterPassword(),
     );
 
     final routeArgs =
@@ -283,7 +284,40 @@ class CredentialRoute extends StatelessWidget {
                                 multiLine: false,
                               );
 
-                              if (!(shortPwRegExp.hasMatch(password) ||
+                              final usedPasswords =
+                                  Provider.of<PlainTextPasswordData>(
+                                        context,
+                                        listen: false,
+                                      ).getPlainTextPasswords() ??
+                                      [];
+
+                              if (usedPasswords.contains(password)) {
+                                Alert(context).showAlertDialog(
+                                  message:
+                                      "It seems you're re-using this password, please avoid using the same passwords as it can lead to multiple accounts being compromised from a single point of failure.",
+                                  onConfirm: () {
+                                    _finalizeCredentialData(
+                                      context: context,
+                                      database: database,
+                                      crypt: crypt,
+                                      id: fetchData
+                                          ? credential.id
+                                          : Uuid().v4(),
+                                      title: title,
+                                      account: account,
+                                      password: password,
+                                      note: note,
+                                      update: fetchData,
+                                    );
+
+                                    Navigator.of(context).pop();
+                                  },
+                                  confirmText: "Ok",
+                                  confirmTooltip: "Dismiss this warning",
+                                  confirmIcon: Icons.warning,
+                                  confirmIconColor: Colors.yellowAccent,
+                                );
+                              } else if (!(shortPwRegExp.hasMatch(password) ||
                                   longPwRegExp.hasMatch(password))) {
                                 Alert(context).showAlertDialog(
                                   message:

@@ -2,7 +2,7 @@ import 'package:easy_dynamic_theme/easy_dynamic_theme.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 import 'package:passman/models/app_state.dart';
-import 'package:passman/models/unhashed_password.dart';
+import 'package:passman/models/plain_text_password_data.dart';
 import 'package:passman/routes/credential_route.dart';
 import 'package:passman/routes/home_route.dart';
 import 'package:passman/routes/lock_screen_route.dart';
@@ -31,8 +31,8 @@ class MyApp extends StatelessWidget {
         Provider<AppDatabase>(
           create: (_) => AppDatabase(),
         ),
-        ChangeNotifierProvider<UnhashedPassword>(
-          create: (_) => UnhashedPassword(),
+        ChangeNotifierProvider<PlainTextPasswordData>(
+          create: (_) => PlainTextPasswordData(),
         ),
         ChangeNotifierProvider<AppState>(
           create: (_) => AppState(),

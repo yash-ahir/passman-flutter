@@ -1,5 +1,5 @@
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
-import 'package:passman/models/unhashed_password.dart';
+import 'package:passman/models/plain_text_password_data.dart';
 import 'package:passman/routes/credential_route.dart';
 import 'package:passman/routes/settings_route.dart';
 import 'package:passman/services/crypt.dart';
@@ -20,7 +20,8 @@ class HomeRoute extends StatelessWidget {
   Future<List<Credential>> _decryptData(
       BuildContext context, List<Credential> encryptedCredentials) async {
     final crypt = Crypt(
-      masterPass: Provider.of<UnhashedPassword>(context).getUnhashedPassword(),
+      masterPass: Provider.of<PlainTextPasswordData>(context)
+          .getUnhashedMasterPassword(),
     );
 
     List<Credential> credentials = [];
@@ -129,6 +130,15 @@ class HomeRoute extends StatelessWidget {
             future: _decryptData(context, credentials),
             builder: (ctx, AsyncSnapshot<List<Credential>> snapshot) {
               if (snapshot.connectionState == ConnectionState.done) {
+                final decryptedPasswords = List<String>.empty(growable: true);
+
+                for (Credential credential in snapshot.data) {
+                  decryptedPasswords.add(credential.password);
+                }
+
+                Provider.of<PlainTextPasswordData>(context)
+                    .setPlainTextPasswords(decryptedPasswords);
+
                 return NeumorphicCredentialList(
                   credentials: snapshot.data,
                 );

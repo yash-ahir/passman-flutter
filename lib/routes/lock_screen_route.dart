@@ -1,6 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
-import 'package:passman/models/unhashed_password.dart';
+import 'package:passman/models/plain_text_password_data.dart';
 import 'package:passman/services/crypt.dart';
 import 'package:passman/services/database.dart';
 import 'package:passman/widgets/alert.dart';
@@ -29,10 +29,10 @@ class LockScreenRoute extends StatelessWidget {
 
         if (hashedData["hashedMasterPassword"] ==
             storedMasterPassword.hashedPassword) {
-          Provider.of<UnhashedPassword>(
+          Provider.of<PlainTextPasswordData>(
             context,
             listen: false,
-          ).setUnhashedPassword(password);
+          ).setUnhashedMasterPassword(password);
 
           unlocker();
         } else {
