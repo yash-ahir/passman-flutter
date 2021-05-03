@@ -46,3 +46,10 @@ app.*.map.json
 /android/app/release
 .vscode/c_cpp_properties.json
 .upload-keystore.jks
+.sync_874e63219bc2.db
+.sync_ec485fc9c479.db
+.gitignore
+.sync_ec485fc9c479.db-shm
+.sync-exclude.lst
+.gitignore
+.sync_ec485fc9c479.db-wal
