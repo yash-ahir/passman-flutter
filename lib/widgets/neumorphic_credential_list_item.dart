@@ -28,94 +28,99 @@ class NeumorphicCredentialListItem extends StatelessWidget {
       color: NeumorphicTheme.defaultTextColor(context),
     );
 
-    return InkWell(
-      mouseCursor: SystemMouseCursors.basic,
-      onTap: () {
-        Navigator.of(context).pushNamed(
-          CredentialRoute.routeName,
-          arguments: {
-            "viewMode": ViewMode.read,
-            "credential": credential,
+    return Neumorphic(
+      drawSurfaceAboveChild: false,
+      margin: const EdgeInsets.all(10.0),
+      style: NeumorphicStyle(
+        lightSource: NeumorphicTheme.currentTheme(context).lightSource,
+        depth: -5,
+      ),
+      child: Material(
+        color: Color(0x000000),
+        child: InkWell(
+          mouseCursor: SystemMouseCursors.basic,
+          onTap: () {
+            Navigator.of(context).pushNamed(
+              CredentialRoute.routeName,
+              arguments: {
+                "viewMode": ViewMode.read,
+                "credential": credential,
+              },
+            );
           },
-        );
-      },
-      onLongPress: () {
-        FlutterClipboard.copy(credential.account).then(
-          (value) => Alert(context).showSnackBar(
-            message: "Account copied to clipboard.",
-          ),
-        );
-      },
-      splashColor: NeumorphicTheme.currentTheme(context).accentColor,
-      child: Neumorphic(
-        drawSurfaceAboveChild: false,
-        margin: const EdgeInsets.all(10.0),
-        padding: const EdgeInsets.all(10.0),
-        style: NeumorphicStyle(
-          lightSource: NeumorphicTheme.currentTheme(context).lightSource,
-          depth: -5,
-        ),
-        child: ListTile(
-          title: Text(credential.title, style: titleTextStyle),
-          subtitle: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                credential.account,
-                style: _subtitleTextStyle,
-              )
-            ],
-          ),
-          trailing: Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              NeumorphicIconButton(
-                icon: Icon(
-                  Icons.copy,
-                  color: NeumorphicTheme.accentColor(context),
-                ),
-                tooltip: "Copy password to clipboard",
-                onPressed: () {
-                  FlutterClipboard.copy(credential.password).then(
-                    (value) => Alert(context).showSnackBar(
-                      message: "Password copied to clipboard.",
-                    ),
-                  );
-                },
+          onLongPress: () {
+            FlutterClipboard.copy(credential.account).then(
+              (value) => Alert(context).showSnackBar(
+                message: "Account copied to clipboard.",
               ),
-              SizedBox(
-                width: 20,
-              ),
-              NeumorphicIconButton(
-                icon: Icon(
-                  Icons.delete,
-                  color: NeumorphicTheme.accentColor(context),
+            );
+          },
+          splashColor: NeumorphicTheme.currentTheme(context).accentColor,
+          child: ListTile(
+            contentPadding: const EdgeInsets.all(10.0),
+            title: Text(credential.title, style: titleTextStyle),
+            subtitle: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  credential.account,
+                  style: _subtitleTextStyle,
+                )
+              ],
+            ),
+            trailing: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                NeumorphicIconButton(
+                  icon: Icon(
+                    Icons.copy,
+                    color: NeumorphicTheme.accentColor(context),
+                  ),
+                  tooltip: "Copy password to clipboard",
+                  onPressed: () {
+                    FlutterClipboard.copy(credential.password).then(
+                      (value) => Alert(context).showSnackBar(
+                        message: "Password copied to clipboard.",
+                      ),
+                    );
+                  },
                 ),
-                tooltip: "Delete credential",
-                onPressed: () {
-                  Alert(context).showActionDialog(
-                    message: "Delete credential? This action cannot be undone!",
-                    onConfirm: () {
-                      database.deleteCredential(credential);
-                      Navigator.of(context).pop();
-                      Alert(context).showSnackBar(
-                          message: "Credential deleted successfully");
-                    },
-                    confirmText: "Yes",
-                    confirmTooltip: "Permanently delete this credential",
-                    confirmIcon: Icons.delete,
-                    confirmIconColor: Colors.red,
-                    onCancel: () {
-                      Navigator.of(context).pop();
-                    },
-                    cancelText: "No",
-                    cancelTooltip: "Dismiss this message",
-                    cancelIcon: Icons.cancel,
-                    cancelIconColor: NeumorphicTheme.defaultTextColor(context),
-                  );
-                },
-              )
-            ],
+                SizedBox(
+                  width: 20,
+                ),
+                NeumorphicIconButton(
+                  icon: Icon(
+                    Icons.delete,
+                    color: NeumorphicTheme.accentColor(context),
+                  ),
+                  tooltip: "Delete credential",
+                  onPressed: () {
+                    Alert(context).showActionDialog(
+                      message:
+                          "Delete credential? This action cannot be undone!",
+                      onConfirm: () {
+                        database.deleteCredential(credential);
+                        Navigator.of(context).pop();
+                        Alert(context).showSnackBar(
+                            message: "Credential deleted successfully");
+                      },
+                      confirmText: "Yes",
+                      confirmTooltip: "Permanently delete this credential",
+                      confirmIcon: Icons.delete,
+                      confirmIconColor: Colors.red,
+                      onCancel: () {
+                        Navigator.of(context).pop();
+                      },
+                      cancelText: "No",
+                      cancelTooltip: "Dismiss this message",
+                      cancelIcon: Icons.cancel,
+                      cancelIconColor:
+                          NeumorphicTheme.defaultTextColor(context),
+                    );
+                  },
+                )
+              ],
+            ),
           ),
         ),
       ),
