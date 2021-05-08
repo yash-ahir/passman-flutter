@@ -3,6 +3,8 @@
 PassMan Logo © 2021 by Yash Ahir is licensed under CC BY-NC 4.0 
 
 ### A simple, cross-platform password manager created with Flutter.
+
+<a href='https://play.google.com/store/apps/details?id=com.yashahir.passman&pcampaignid=pcampaignidMKT-Other-global-all-co-prtnr-py-PartBadge-Mar2515-1'><img alt='Get it on Google Play' src='https://play.google.com/intl/en_us/badges/static/images/badges/en_badge_web_generic.png' width='180'/></a>
 ---
 ### How to run this
 - Install Flutter for your platform of choice from [here](https://flutter.dev/docs/get-started/install).
