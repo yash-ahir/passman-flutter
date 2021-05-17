@@ -279,7 +279,7 @@ class CredentialRoute extends StatelessWidget {
                                 multiLine: false,
                               );
                               final longPwRegExp = RegExp(
-                                r"""^(?=.*?[A-Z])(?=.*?[a-z]).{24,}$""",
+                                r"""^(?=.*?[A-Z])(?=.*?[a-z]).{16,}$""",
                                 caseSensitive: false,
                                 multiLine: false,
                               );
@@ -291,7 +291,8 @@ class CredentialRoute extends StatelessWidget {
                                       ).getPlainTextPasswords() ??
                                       [];
 
-                              if (usedPasswords.contains(password)) {
+                              if (usedPasswords.contains(password) &&
+                                  viewMode != ViewMode.update) {
                                 Alert(context).showAlertDialog(
                                   message:
                                       "It seems you're re-using this password, please avoid using the same passwords as it can lead to multiple accounts being compromised from a single point of failure.",
